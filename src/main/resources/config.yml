@@ -1,0 +1,27 @@
+Prefix: '&bAetherPotions > &7'
+force-new-support: false
+Cooldown-Second: 10
+Potions:
+  powerup:
+    name: '&7Power Up Potion'
+    lore:
+      - '&7Drinking this gives &b50 EXP and Haste&7.'
+    type: SPEED
+    delete-bottle-after-drink: true
+    particle:
+      enabled: true
+      # 1.8: https://helpch.at/docs/1.8/org/bukkit/Effect.html
+      # 1.9+: https://helpch.at/docs/1.12.2/org/bukkit/Particle.html
+      type: END_ROD
+      time: 10
+      amount: 10
+    commands-on-drink: #When drank
+      - 'msg %player% You feel extremely powerful.'
+      - 'msg %player% Gained 50 EXP.'
+      - 'effect %player% minecraft:haste 20 0'
+    after-effect: #Make commands for after effect.
+      enabled: true
+      #Type = second.
+      time: 20
+      commands:
+        - 'msg %player% Effect has been removed.'

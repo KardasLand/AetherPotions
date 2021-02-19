@@ -1,0 +1,8 @@
+name: AetherPotions
+version: ${project.version}
+main: com.kardasland.aetherpotions.AetherPotions
+authors: [ KardasLand ]
+description: Make difference in potions!
+website: www.kardasland.com
+commands:
+  aetherpotions:
