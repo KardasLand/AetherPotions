@@ -1,0 +1,7 @@
+name: SnowPotions
+version: '${project.version}'
+main: com.kardasland.snowpotions.SnowPotions
+api-version: 1.15
+authors: [KardasLand]
+description: A customizable potion plugin.
+website: www.kardasland.com

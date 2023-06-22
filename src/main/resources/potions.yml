@@ -1,0 +1,22 @@
+potions:
+  a:
+    displayName: "%50"
+    lore:
+      - "%50 şansla 10k"
+      - "%50 şansla başını alırsın"
+    isSplash: true
+    deleteBottle: true
+    data:
+      potionType: "STRENGTH"
+    particle:
+      enabled: true
+    commands:
+      drinkingCommands:
+        - ""
+      splashCommands:
+        - ""
+      afterEffect:
+        enabled: true
+        commands:
+          - ""
+
