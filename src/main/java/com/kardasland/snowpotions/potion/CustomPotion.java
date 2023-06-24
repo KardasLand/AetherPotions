@@ -43,6 +43,9 @@ public class CustomPotion {
     @Getter @Setter
     private PotionData data;
 
+    @Getter @Setter
+    private PotionValidation validation;
+
 
     public CustomPotion(String id){
         init(id, false);
@@ -53,7 +56,12 @@ public class CustomPotion {
 
     public void init(String id, boolean reduced){
         this.id = id;
+        PotionValidation potionValidation = new PotionValidation(id);
+        if (!potionValidation.isValid()){
+            return;
+        }
         FileConfiguration cf = ConfigManager.get("potions.yml");
+        assert cf != null;
         String shortcut = "potions."+id+".";
         this.displayName = cf.getString(shortcut + "displayName");
         this.lore = cf.getStringList(shortcut + "lore");

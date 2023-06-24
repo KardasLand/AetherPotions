@@ -10,6 +10,9 @@ potions:
       potionType: "STRENGTH"
     particle:
       enabled: true
+      type: ""
+      time: 200
+      amount: 20
     commands:
       drinkingCommands:
         - ""

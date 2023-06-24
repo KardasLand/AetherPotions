@@ -1,5 +1,6 @@
 package com.kardasland.snowpotions.utility;
 
+import com.kardasland.snowpotions.AetherPotions;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -19,6 +20,22 @@ public class Misc {
     }
 
     public static void send(Player p, String s, boolean prefix){
-        p.sendMessage(((prefix) ? ConfigManager.get("config.yml").getString("Prefix") : "") + color(s));
+        try {
+            String wholeMessage = ((prefix) ? ConfigManager.get("config.yml").getString("Prefix") : "") + color(s);
+
+            if (p != null) {
+                p.sendMessage(wholeMessage);
+            } else {
+                AetherPotions.instance.getLogger().info(wholeMessage);
+            }
+        }catch (NullPointerException exception){
+            if (p != null){
+                p.sendMessage(Misc.color("&b[AetherPotions] &cAn error occurred! Please contact administrators about the issue."));
+                AetherPotions.instance.getLogger().info(Misc.color("&cAn error occurred! Likely prefix section on config is missing.."));
+            }else {
+                AetherPotions.instance.getLogger().info(Misc.color("&cAn error occurred! Likely prefix section on config is missing.."));
+            }
+
+        }
     }
 }
