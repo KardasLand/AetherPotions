@@ -1,9 +1,9 @@
-package com.kardasland.snowpotions;
+package com.kardasland.aetherpotions;
 
-import com.kardasland.snowpotions.commands.MainCommand;
-import com.kardasland.snowpotions.events.DrinkEvent;
-import com.kardasland.snowpotions.events.SplashEvent;
-import com.kardasland.snowpotions.utility.ConfigManager;
+import com.kardasland.aetherpotions.commands.MainCommand;
+import com.kardasland.aetherpotions.events.DrinkEvent;
+import com.kardasland.aetherpotions.events.SplashEvent;
+import com.kardasland.aetherpotions.utility.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,12 +12,6 @@ import java.util.Objects;
 public final class AetherPotions extends JavaPlugin {
 
     public static AetherPotions instance;
-
-    /***TODO
-        Main hand - off hand detection
-        then idk, go to the testing maybe?
-     ***/
-
 
     @Override
     public void onEnable() {

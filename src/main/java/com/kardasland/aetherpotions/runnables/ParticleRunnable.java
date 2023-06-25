@@ -1,9 +1,8 @@
-package com.kardasland.snowpotions.runnables;
+package com.kardasland.aetherpotions.runnables;
 
-import com.kardasland.snowpotions.potion.CustomPotion;
+import com.kardasland.aetherpotions.potion.CustomPotion;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.Potion;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;

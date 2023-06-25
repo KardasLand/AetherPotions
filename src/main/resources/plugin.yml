@@ -1,6 +1,6 @@
-name: SnowPotions
+name: AetherPotions
 version: '${project.version}'
-main: com.kardasland.snowpotions.SnowPotions
+main: com.kardasland.aetherpotions.AetherPotions
 api-version: 1.15
 authors: [KardasLand]
 description: A customizable potion plugin.

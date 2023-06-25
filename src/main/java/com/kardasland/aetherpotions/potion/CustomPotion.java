@@ -1,10 +1,10 @@
-package com.kardasland.snowpotions.potion;
+package com.kardasland.aetherpotions.potion;
 
-import com.kardasland.snowpotions.AetherPotions;
-import com.kardasland.snowpotions.runnables.ParticleRunnable;
-import com.kardasland.snowpotions.utility.ConfigManager;
-import com.kardasland.snowpotions.utility.CooldownHandler;
-import com.kardasland.snowpotions.utility.Misc;
+import com.kardasland.aetherpotions.AetherPotions;
+import com.kardasland.aetherpotions.runnables.ParticleRunnable;
+import com.kardasland.aetherpotions.utility.ConfigManager;
+import com.kardasland.aetherpotions.utility.CooldownHandler;
+import com.kardasland.aetherpotions.utility.Misc;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -66,11 +66,11 @@ public class CustomPotion {
         this.displayName = cf.getString(shortcut + "displayName");
         this.lore = cf.getStringList(shortcut + "lore");
         this.isSplash = cf.getBoolean(shortcut + "isSplash");
+        this.data = new PotionData(PotionType.valueOf(cf.getString(shortcut + "data.potionType")), false, false);
         if (!reduced){
             this.deleteBottle = !isSplash && cf.getBoolean(shortcut + "deleteBottle");
             this.particle = new CustomParticle(id);
             this.commandList = new CustomCommandList(id, isSplash);
-            this.data = new PotionData(PotionType.valueOf(cf.getString(shortcut + "data.potionType")), false, false);
         }
     }
 
@@ -86,7 +86,8 @@ public class CustomPotion {
                 c.start();
             }
 
-            for (String command : getCommandList().getDrinkingCommandList()){
+
+            for (String command : (isSplash ? getCommandList().getSplashCommandList() : getCommandList().getDrinkingCommandList())){
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", p.getName()));
             }
 

@@ -1,25 +1,47 @@
 potions:
-  a:
-    displayName: "%50"
+  drink:
+    displayName: "&cDrink"
     lore:
-      - "%50 şansla 10k"
-      - "%50 şansla başını alırsın"
-    isSplash: true
+      - "&5Drink potion attempt"
+    isSplash: false
     deleteBottle: true
     data:
       potionType: "STRENGTH"
     particle:
-      enabled: true
+      enabled: false
       type: ""
       time: 200
       amount: 20
     commands:
       drinkingCommands:
-        - ""
+        - "msg %player% ae"
       splashCommands:
         - ""
       afterEffect:
         enabled: true
+        time: 5
         commands:
-          - ""
-
+          - "give %player% diamond 5"
+  splash:
+    displayName: "&cSplash Try"
+    lore:
+      - "&5Trying splash feature"
+    isSplash: true
+    deleteBottle: false
+    data:
+      potionType: "STRENGTH"
+    particle:
+      enabled: true
+      type: "END_ROD"
+      time: 10
+      amount: 50
+    commands:
+      drinkingCommands:
+        - ""
+      splashCommands:
+        - "give %player% iron_ingot 5"
+      afterEffect:
+        enabled: true
+        time: 8
+        commands:
+          - "msg %player% afterEffect"

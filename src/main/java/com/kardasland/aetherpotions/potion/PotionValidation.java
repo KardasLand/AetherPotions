@@ -1,12 +1,14 @@
-package com.kardasland.snowpotions.potion;
+package com.kardasland.aetherpotions.potion;
 
-import com.kardasland.snowpotions.utility.ConfigManager;
+import com.kardasland.aetherpotions.utility.ConfigManager;
+import com.kardasland.aetherpotions.utility.Misc;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.potion.PotionType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PotionValidation {
@@ -26,8 +28,9 @@ public class PotionValidation {
         this.cf = ConfigManager.get("potions.yml");
         assert cf != null;
         this.id = id;
-        if (!cf.isConfigurationSection("potions.id")){
-            setExists(false);
+        this.potionErrors = new ArrayList<>();
+        setExists(cf.isConfigurationSection("potions."+id));
+        if (!exists){
             return;
         }
         checkItems();
@@ -73,11 +76,11 @@ public class PotionValidation {
         String commands = "potions."+id+".commands.";
         String shortcut = "potions."+id+".";
         if (cf.isSet(shortcut + "isSplash") && cf.getBoolean(shortcut + "isSplash")){
-            if (!cf.isSet(commands + "splashCommandList")){
+            if (!cf.isSet(commands + "splashCommands")){
                 potionErrors.add(Errors.SPLASH_COMMANDS);
             }
         }else {
-            if (!cf.isSet(commands + "drinkingCommandList")){
+            if (!cf.isSet(commands + "drinkingCommands")){
                 potionErrors.add(Errors.DRINKING_COMMANDS);
             }
         }

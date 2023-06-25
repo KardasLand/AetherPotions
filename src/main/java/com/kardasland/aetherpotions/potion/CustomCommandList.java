@@ -1,6 +1,6 @@
-package com.kardasland.snowpotions.potion;
+package com.kardasland.aetherpotions.potion;
 
-import com.kardasland.snowpotions.utility.ConfigManager;
+import com.kardasland.aetherpotions.utility.ConfigManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,9 +22,9 @@ public class CustomCommandList {
         this.isSplash = isSplash;
         String shortcut = "potions."+id+".commands.";
         if (isSplash){
-            this.splashCommandList = cf.getStringList(shortcut + "splashCommandList");
+            this.splashCommandList = cf.getStringList(shortcut + "splashCommands");
         }else {
-            this.drinkingCommandList = cf.getStringList(shortcut + "drinkingCommandList");
+            this.drinkingCommandList = cf.getStringList(shortcut + "drinkingCommands");
         }
         this.afterEffect = new AfterEffect(id);
     }

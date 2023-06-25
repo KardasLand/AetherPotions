@@ -1,6 +1,6 @@
-package com.kardasland.snowpotions.potion;
+package com.kardasland.aetherpotions.potion;
 
-import com.kardasland.snowpotions.utility.ConfigManager;
+import com.kardasland.aetherpotions.utility.ConfigManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.configuration.file.FileConfiguration;

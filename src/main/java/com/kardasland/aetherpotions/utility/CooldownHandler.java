@@ -1,4 +1,4 @@
-package com.kardasland.snowpotions.utility;
+package com.kardasland.aetherpotions.utility;
 
 import java.util.HashMap;
 import java.util.Map;
