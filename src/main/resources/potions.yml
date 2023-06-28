@@ -1,27 +1,43 @@
 potions:
+  # Drinkable potion example
+  # potion id. Needs to be unique.
   drink:
     displayName: "&cDrink"
     lore:
       - "&5Drink potion attempt"
+    # Will potion be splash or drinkable?
     isSplash: false
+    # If it is drinkable, will it delete the bottle?
     deleteBottle: true
     data:
+      # Potion type. Things like Speed, Strength etc..
+      # List: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionType.html
       potionType: "STRENGTH"
     particle:
+      # Particle system.
+      # List: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
       enabled: false
       type: ""
+      # Time in seconds.
       time: 200
+      # Particle amount per second. You have to try and test this setting.
       amount: 20
     commands:
+      # If it is splash, you can remove this line.
       drinkingCommands:
         - "msg %player% ae"
+      # If it is drinkable, you can remove this line.
       splashCommands:
         - ""
       afterEffect:
+        # After Effect feature.
         enabled: true
+        # Time in seconds.
         time: 5
         commands:
           - "give %player% diamond 5"
+  # Splash potion example. Pretty much same.
+  # You need to enable potion-splash flag on regions you want to enable splash potions!
   splash:
     displayName: "&cSplash Try"
     lore:

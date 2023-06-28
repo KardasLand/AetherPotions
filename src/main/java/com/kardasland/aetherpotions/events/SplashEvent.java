@@ -10,6 +10,7 @@ import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
@@ -35,7 +36,7 @@ public class SplashEvent implements Listener {
                 Player player = (Player) event.getEntity().getShooter();
                 ItemStack item = player.getInventory().getItemInMainHand();
                 if (item.getItemMeta() != null && NBTEditor.contains(item, "potionid")){
-                    if (isAllowed((Player) event.getEntity().getShooter(), event.getLocation())){
+                    if (isAllowed((Player) event.getEntity().getShooter(), event.getLocation(), true)){
                         event.getEntity().setMetadata("aetherpotion", new FixedMetadataValue(AetherPotions.instance, NBTEditor.getString(item, "potionid")));
                     }else {
                         Misc.send((Player) event.getEntity().getShooter(), ConfigManager.get("messages.yml").getString("NotAllowedToThrow"), true);
@@ -55,7 +56,7 @@ public class SplashEvent implements Listener {
             boolean oneTime = true;
             for (Entity e : event.getAffectedEntities()){
                 if (e instanceof Player){
-                    if (isAllowed(((Player) e).getPlayer(), event.getEntity().getLocation())){
+                    if (isAllowed(((Player) e).getPlayer(), event.getEntity().getLocation(), true)){
                         // we can safely do null because it cannot and will not use the event cause of the splash feature
                         customPotion.apply(Objects.requireNonNull(((Player) e).getPlayer()), null);
                     }else if (oneTime){
@@ -78,10 +79,14 @@ public class SplashEvent implements Listener {
         }
     }
 
-    public boolean isAllowed(Player player, Location location){
+    public boolean isAllowed(Player player, Location location, boolean strict){
         LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
-        return query.testState(BukkitAdapter.adapt(location), localPlayer, Flags.POTION_SPLASH);
+        if (strict){
+            return query.testState(BukkitAdapter.adapt(location), localPlayer, Flags.POTION_SPLASH);
+        }else {
+            return !Objects.equals(query.queryState(BukkitAdapter.adapt(location), localPlayer, Flags.POTION_SPLASH), StateFlag.State.DENY);
+        }
     }
 }
