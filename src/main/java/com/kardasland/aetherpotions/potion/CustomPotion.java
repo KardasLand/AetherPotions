@@ -5,6 +5,7 @@ import com.kardasland.aetherpotions.runnables.ParticleRunnable;
 import com.kardasland.aetherpotions.utility.ConfigManager;
 import com.kardasland.aetherpotions.utility.CooldownHandler;
 import com.kardasland.aetherpotions.utility.Misc;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -18,32 +19,26 @@ import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
+
+@Data
 public class CustomPotion {
-    @Getter @Setter
     private String displayName;
-    @Getter @Setter
     private String id;
-    @Getter @Setter
     private int time;
-    @Getter @Setter
     private List<String> lore;
-    @Getter @Setter
     private boolean deleteBottle;
-    @Getter @Setter
     private boolean isSplash;
-    @Getter @Setter
     private CustomParticle particle;
-    @Getter @Setter
     private CustomCommandList commandList;
-    @Getter @Setter
     private PotionType type;
 
-    @Getter @Setter
-    private PotionData data;
+    private boolean isExtended = false;
+    private boolean isUpgraded = false;
 
-    @Getter @Setter
+    private PotionData data;
     private PotionValidation validation;
 
 
@@ -66,7 +61,14 @@ public class CustomPotion {
         this.displayName = cf.getString(shortcut + "displayName");
         this.lore = cf.getStringList(shortcut + "lore");
         this.isSplash = cf.getBoolean(shortcut + "isSplash");
-        this.data = new PotionData(PotionType.valueOf(cf.getString(shortcut + "data.potionType")), false, false);
+        String potionType = cf.getString(shortcut + "data.potionType");
+        if (cf.isSet(shortcut + "data.extended")){
+            this.isExtended = cf.getBoolean(shortcut + "data.extended");
+        }
+        if (cf.isSet(shortcut + "data.upgraded")){
+            this.isUpgraded = cf.getBoolean(shortcut + "data.upgraded");
+        }
+        this.data = new PotionData(PotionType.valueOf(potionType), isExtended, isUpgraded);
         if (!reduced){
             this.deleteBottle = !isSplash && cf.getBoolean(shortcut + "deleteBottle");
             this.particle = new CustomParticle(id);

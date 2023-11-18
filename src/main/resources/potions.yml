@@ -13,6 +13,8 @@ potions:
       # Potion type. Things like Speed, Strength etc..
       # List: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionType.html
       potionType: "STRENGTH"
+      extended: true
+      upgraded: true
     particle:
       # Particle system.
       # List: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
