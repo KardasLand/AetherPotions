@@ -13,7 +13,11 @@ potions:
       # Potion type. Things like Speed, Strength etc..
       # List: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionType.html
       potionType: "STRENGTH"
+      # This option is needed if you need to apply original potion effect.
+      originalEffect: true
+      # If you want to extend the potion time same as brewing, you can use this option.
       extended: true
+      # If you want to upgrade the potion same as brewing, you can use this option.
       upgraded: true
     particle:
       # Particle system.

@@ -2,6 +2,7 @@ package com.kardasland.aetherpotions.potion;
 
 import com.kardasland.aetherpotions.utility.ConfigManager;
 import com.kardasland.aetherpotions.utility.Misc;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Particle;
@@ -11,14 +12,11 @@ import org.bukkit.potion.PotionType;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public class PotionValidation {
-    @Getter @Setter
     CustomPotion customPotion;
-    @Getter @Setter
     boolean isValid;
-    @Getter @Setter
     boolean exists;
-    @Getter @Setter
     List<Errors> potionErrors;
     String id;
     FileConfiguration cf;

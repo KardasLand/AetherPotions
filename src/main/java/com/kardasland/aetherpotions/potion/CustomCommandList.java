@@ -1,21 +1,21 @@
 package com.kardasland.aetherpotions.potion;
 
 import com.kardasland.aetherpotions.utility.ConfigManager;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.List;
 
+
+@Data
 public class CustomCommandList {
 
-    @Getter @Setter
     private List<String> drinkingCommandList;
-    @Getter @Setter
     private List<String> splashCommandList;
-    @Getter @Setter
     public boolean isSplash;
-    @Getter @Setter AfterEffect afterEffect;
+    AfterEffect afterEffect;
 
     public CustomCommandList(String id, boolean isSplash) {
         FileConfiguration cf = ConfigManager.get("potions.yml");
@@ -29,12 +29,11 @@ public class CustomCommandList {
         this.afterEffect = new AfterEffect(id);
     }
 
+
+    @Data
     public static class AfterEffect{
-        @Getter @Setter
         private boolean enabled;
-        @Getter @Setter
         private int time;
-        @Getter @Setter
         private List<String> commands;
 
         public AfterEffect(String id) {

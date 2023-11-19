@@ -40,6 +40,12 @@ public class MainCommand implements CommandExecutor {
             case "give": {
                 if (Misc.checkPerm(player, "aetherpotions.give")){
                     try {
+
+                        // how did i forget this basic error checking
+                        if (args.length < 4){
+                            Misc.send(player, "Please enter a player name and potion id.", true);
+                            return true;
+                        }
                         int amount = args.length == 3 ? 1 : Integer.parseInt(args[3]);
                         Misc.send(player, givePotion(args[1], args[2], amount) ? "Success." : "Failed, check the console.", true);
                     }catch (NumberFormatException exception){
@@ -56,6 +62,11 @@ public class MainCommand implements CommandExecutor {
             }
             case "info": {
                 if (Misc.checkPerm(player, "aetherpotions.info")){
+                    if (args.length <= 2){
+                        Misc.send(player, "Please enter a potion id.", true);
+                        return true;
+                    }
+                    // /aetherpotions info <id> [detailed]
                     String id = args[1];
                     boolean detailed = args.length == 3 && Boolean.parseBoolean(args[2]);
                     info(player, id, detailed);

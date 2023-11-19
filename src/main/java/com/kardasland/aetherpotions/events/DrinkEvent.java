@@ -18,8 +18,9 @@ public class DrinkEvent implements Listener {
                 String id = NBTEditor.getString(event.getItem(), "potionid");
                 PotionValidation potionValidation = new PotionValidation(id);
                 if (potionValidation.isExists() && potionValidation.isValid() ){
-                    event.setCancelled(true);
-                    new CustomPotion(id).apply(event.getPlayer(), event);
+                    CustomPotion customPotion = new CustomPotion(id);
+                    event.setCancelled(!customPotion.isOriginalEffect());
+                    customPotion.apply(event.getPlayer(), event);
                 }
             }
         }

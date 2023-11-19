@@ -6,8 +6,6 @@ import com.kardasland.aetherpotions.utility.ConfigManager;
 import com.kardasland.aetherpotions.utility.CooldownHandler;
 import com.kardasland.aetherpotions.utility.Misc;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,7 +17,6 @@ import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 
@@ -37,6 +34,7 @@ public class CustomPotion {
 
     private boolean isExtended = false;
     private boolean isUpgraded = false;
+    private boolean originalEffect = false;
 
     private PotionData data;
     private PotionValidation validation;
@@ -67,6 +65,9 @@ public class CustomPotion {
         }
         if (cf.isSet(shortcut + "data.upgraded")){
             this.isUpgraded = cf.getBoolean(shortcut + "data.upgraded");
+        }
+        if (cf.isSet(shortcut + "data.originalEffect")){
+            this.originalEffect = cf.getBoolean(shortcut + "data.originalEffect");
         }
         this.data = new PotionData(PotionType.valueOf(potionType), isExtended, isUpgraded);
         if (!reduced){
