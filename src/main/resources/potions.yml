@@ -10,14 +10,16 @@ potions:
     # If it is drinkable, will it delete the bottle?
     deleteBottle: true
     data:
-      # Potion type. Things like Speed, Strength etc..
+      # Potion type. Things like Speed, Strength etc...
+      # Do not put prefixes like STRONG, LONG etc. Just put the plain old potion type and configure level/time below.
       # List: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionType.html
       potionType: "STRENGTH"
       # This option is needed if you need to apply original potion effect.
+      # For example if potion type is strength, strength effect will be applied with the commands.
       originalEffect: true
       # If you want to extend the potion time same as brewing, you can use this option.
       extended: true
-      # If you want to upgrade the potion same as brewing, you can use this option.
+      # If you want to upgrade the potion same as brewing (Level 2), you can use this option.
       upgraded: true
     particle:
       # Particle system.
