@@ -2,6 +2,7 @@ package com.kardasland.aetherpotions.potion;
 
 import com.kardasland.aetherpotions.utility.ConfigManager;
 import com.kardasland.aetherpotions.utility.Misc;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Particle;
@@ -11,14 +12,11 @@ import org.bukkit.potion.PotionType;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public class PotionValidation {
-    @Getter @Setter
     CustomPotion customPotion;
-    @Getter @Setter
     boolean isValid;
-    @Getter @Setter
     boolean exists;
-    @Getter @Setter
     List<Errors> potionErrors;
     String id;
     FileConfiguration cf;
@@ -38,6 +36,7 @@ public class PotionValidation {
         checkCommandList();
         checkAfterEffect();
         checkParticle();
+        checkExtendAndUpgrade();
         if (potionErrors.size() == 0){
             setValid(true);
         }
@@ -68,6 +67,15 @@ public class PotionValidation {
             if (!cf.isSet(aftereffect + "commands")){
                 potionErrors.add(Errors.AFTER_EFFECTS);
             }
+        }
+    }
+
+    private void checkExtendAndUpgrade(){
+        String shortcut = "potions."+id+".";
+        boolean isExtended = cf.isSet(shortcut + "data.extended") && cf.getBoolean(shortcut + "data.extended");
+        boolean isUpgraded = cf.isSet(shortcut + "data.upgraded") && cf.getBoolean(shortcut + "data.upgraded");
+        if (isExtended && isUpgraded){
+            potionErrors.add(Errors.POTION_TYPE);
         }
     }
 
@@ -124,7 +132,7 @@ public class PotionValidation {
         PARTICLE,
         DRINKING_COMMANDS,
         SPLASH_COMMANDS,
-        AFTER_EFFECTS
-
+        AFTER_EFFECTS,
+        BOTH_EXTENDED_AND_UPGRADED
     }
 }

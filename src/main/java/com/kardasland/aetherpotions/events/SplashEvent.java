@@ -51,8 +51,8 @@ public class SplashEvent implements Listener {
     public void splash(PotionSplashEvent event) {
         if (event.getPotion().hasMetadata("aetherpotion") && event.getEntity().getShooter() instanceof Player) {
             String id = String.valueOf(event.getPotion().getMetadata("aetherpotion").get(0).value());
-            event.setCancelled(true);
             CustomPotion customPotion = new CustomPotion(id);
+            event.setCancelled(!customPotion.isOriginalEffect());
             boolean oneTime = true;
             for (Entity e : event.getAffectedEntities()){
                 if (e instanceof Player){

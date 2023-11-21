@@ -1,18 +1,16 @@
 package com.kardasland.aetherpotions.potion;
 
 import com.kardasland.aetherpotions.utility.ConfigManager;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.configuration.file.FileConfiguration;
 
+@Data
 public class CustomParticle {
-    @Getter @Setter
     private boolean enabled;
-    @Getter @Setter
     private String type;
-    @Getter @Setter
     private int time;
-    @Getter @Setter
     private int amount;
 
     public CustomParticle(String id) {
