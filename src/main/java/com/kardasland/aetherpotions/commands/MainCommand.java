@@ -42,7 +42,7 @@ public class MainCommand implements CommandExecutor {
                     try {
 
                         // how did i forget this basic error checking
-                        if (args.length < 4){
+                        if (args.length < 3){
                             Misc.send(player, "Please enter a player name and potion id.", true);
                             return true;
                         }
@@ -62,7 +62,7 @@ public class MainCommand implements CommandExecutor {
             }
             case "info": {
                 if (Misc.checkPerm(player, "aetherpotions.info")){
-                    if (args.length <= 2){
+                    if (args.length <= 1){
                         Misc.send(player, "Please enter a potion id.", true);
                         return true;
                     }
