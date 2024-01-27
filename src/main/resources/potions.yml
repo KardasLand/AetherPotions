@@ -16,11 +16,11 @@ potions:
       potionType: "STRENGTH"
       # This option is needed if you need to apply original potion effect.
       # For example if potion type is strength, strength effect will be applied with the commands.
-      originalEffect: true
+      originalEffect: false
       # If you want to extend the potion time same as brewing, you can use this option.
-      extended: true
+      extended: false
       # If you want to upgrade the potion same as brewing (Level 2), you can use this option.
-      upgraded: true
+      upgraded: false
     particle:
       # Particle system.
       # List: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html

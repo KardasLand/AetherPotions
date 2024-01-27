@@ -37,7 +37,7 @@ public class PotionValidation {
         checkAfterEffect();
         checkParticle();
         checkExtendAndUpgrade();
-        if (potionErrors.size() == 0){
+        if (potionErrors.isEmpty()){
             setValid(true);
         }
     }
@@ -75,7 +75,7 @@ public class PotionValidation {
         boolean isExtended = cf.isSet(shortcut + "data.extended") && cf.getBoolean(shortcut + "data.extended");
         boolean isUpgraded = cf.isSet(shortcut + "data.upgraded") && cf.getBoolean(shortcut + "data.upgraded");
         if (isExtended && isUpgraded){
-            potionErrors.add(Errors.POTION_TYPE);
+            potionErrors.add(Errors.BOTH_EXTENDED_AND_UPGRADED);
         }
     }
 

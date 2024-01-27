@@ -42,12 +42,13 @@ public class MainCommand implements CommandExecutor {
                     try {
 
                         // how did i forget this basic error checking
+                        // /aetherpotions give <player> <potion> [amount]
                         if (args.length < 3){
                             Misc.send(player, "Please enter a player name and potion id.", true);
                             return true;
                         }
                         int amount = args.length == 3 ? 1 : Integer.parseInt(args[3]);
-                        Misc.send(player, givePotion(args[1], args[2], amount) ? "Success." : "Failed, check the console.", true);
+                        givePotion(player, args[1], args[2], amount);
                     }catch (NumberFormatException exception){
                         Misc.send(player, "Amount parameter is not a number.", true);
                     }
@@ -133,12 +134,13 @@ public class MainCommand implements CommandExecutor {
         }
     }
 
-    private boolean givePotion(String targetName, String id, int amount){
+    private boolean givePotion(Player player, String targetName, String id, int amount){
         Player target = Bukkit.getPlayer(targetName);
         if (target != null && target.isOnline()){
             CustomPotionItem potionItem = new CustomPotionItem(id, true);
             PotionValidation potionValidation = new PotionValidation(id);
             if (!(potionValidation.isExists() && potionValidation.isValid())){
+                Misc.send(player, "&cThis potion does not exist.", true);
                 return false;
             }
             ItemStack potion = potionItem.build();
@@ -152,6 +154,7 @@ public class MainCommand implements CommandExecutor {
             }
             return true;
         }else {
+            Misc.send(player, "&cThis player is not online.", true);
             return false;
         }
     }
