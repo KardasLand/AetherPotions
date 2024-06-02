@@ -35,9 +35,10 @@ public class SplashEvent implements Listener {
             if (event.getEntity() instanceof ThrownPotion) {
                 Player player = (Player) event.getEntity().getShooter();
                 ItemStack item = player.getInventory().getItemInMainHand();
-                if (item.getItemMeta() != null && NBTEditor.contains(item, "potionid")){
+                // NBTEditor.contains(item, "potionid")
+                if (item.getItemMeta() != null && AetherPotions.instance.getNbtHandler().contains(item, "potionid")){
                     if (isAllowed((Player) event.getEntity().getShooter(), event.getLocation(), true)){
-                        event.getEntity().setMetadata("aetherpotion", new FixedMetadataValue(AetherPotions.instance, NBTEditor.getString(item, "potionid")));
+                        event.getEntity().setMetadata("aetherpotion", new FixedMetadataValue(AetherPotions.instance, AetherPotions.instance.getNbtHandler().getString(item, "potionid")));
                     }else {
                         Misc.send((Player) event.getEntity().getShooter(), ConfigManager.get("messages.yml").getString("NotAllowedToThrow"), true);
                         event.setCancelled(true);
@@ -67,7 +68,7 @@ public class SplashEvent implements Listener {
 
                         CustomPotionItem potionItem = new CustomPotionItem(customPotion);
                         ItemStack potion = potionItem.build();
-                        potion = NBTEditor.set(potion, id, "potionid");
+                        potion = AetherPotions.instance.getNbtHandler().set(potion, id, "potionid");
                         if (shooter.getInventory().firstEmpty() == -1){
                             Objects.requireNonNull(shooter.getLocation().getWorld()).dropItemNaturally(shooter.getLocation(), potion);
                         }else {
@@ -79,14 +80,17 @@ public class SplashEvent implements Listener {
         }
     }
 
+    @Deprecated(since = "3.0.1", forRemoval = true)
+    // Will relocate this method to another class
     public boolean isAllowed(Player player, Location location, boolean strict){
-        LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
+        return AetherPotions.instance.getProtectionHandler().isAllowed(player, location, strict);
+        /*LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
         if (strict){
             return query.testState(BukkitAdapter.adapt(location), localPlayer, Flags.POTION_SPLASH);
         }else {
             return !Objects.equals(query.queryState(BukkitAdapter.adapt(location), localPlayer, Flags.POTION_SPLASH), StateFlag.State.DENY);
-        }
+        }*/
     }
 }

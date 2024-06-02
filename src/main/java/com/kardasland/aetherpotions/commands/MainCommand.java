@@ -144,7 +144,7 @@ public class MainCommand implements CommandExecutor {
                 return false;
             }
             ItemStack potion = potionItem.build();
-            potion = NBTEditor.set(potion, id, "potionid");
+            potion = AetherPotions.instance.getNbtHandler().set(potion, id, "potionid");
             for (int i = 0; i < amount; i++){
                 if (target.getInventory().firstEmpty() == -1){
                     Objects.requireNonNull(target.getLocation().getWorld()).dropItemNaturally(target.getLocation(), potion);

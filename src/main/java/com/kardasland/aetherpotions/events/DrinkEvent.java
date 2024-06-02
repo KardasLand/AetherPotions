@@ -1,5 +1,6 @@
 package com.kardasland.aetherpotions.events;
 
+import com.kardasland.aetherpotions.AetherPotions;
 import com.kardasland.aetherpotions.potion.CustomPotion;
 import com.kardasland.aetherpotions.potion.PotionValidation;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
@@ -13,8 +14,8 @@ public class DrinkEvent implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void check(PlayerItemConsumeEvent event){
         if(event.getItem().hasItemMeta() && event.getItem().getItemMeta() instanceof PotionMeta){
-            if (NBTEditor.contains(event.getItem(), "potionid")) {
-                String id = NBTEditor.getString(event.getItem(), "potionid");
+            if (AetherPotions.instance.getNbtHandler().contains(event.getItem(), "potionid")) {
+                String id = AetherPotions.instance.getNbtHandler().getString(event.getItem(), "potionid");
                 PotionValidation potionValidation = new PotionValidation(id);
                 if (potionValidation.isExists() && potionValidation.isValid() ){
                     CustomPotion customPotion = new CustomPotion(id);

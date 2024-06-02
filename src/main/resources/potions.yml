@@ -69,3 +69,31 @@ potions:
         time: 8
         commands:
           - "msg %player% afterEffect"
+  # Custom flight potion example by @nichoooooooo.
+  flight:
+    displayName: "&6Flight Potion"
+    lore:
+      - "&9Food & Drinks"
+      - "&9Flight I (04:00)"
+    isSplash: false
+    deleteBottle: false
+    data:
+      potionType: "LUCK"
+    particle:
+      enabled: true
+      type: "EFFECT"
+      time: 240
+      amount: 50
+    commands:
+      drinkingCommands:
+        - "fly %player% enable"
+        - "w %player% You get this whimsical feeling flowing through your body.. you're glowing.. and you can fly!!"
+        - "effect give %player% minecraft:glowing 300"
+      splashCommands:
+        - ""
+      afterEffect:
+        enabled: true
+        time: 240
+        commands:
+          - "fly %player% disable"
+          - "w %player% You're starting to feel pretty normal again. Perhaps another potion?"
