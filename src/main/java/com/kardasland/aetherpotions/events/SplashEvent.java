@@ -5,15 +5,6 @@ import com.kardasland.aetherpotions.potion.CustomPotion;
 import com.kardasland.aetherpotions.potion.CustomPotionItem;
 import com.kardasland.aetherpotions.utility.ConfigManager;
 import com.kardasland.aetherpotions.utility.Misc;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldguard.LocalPlayer;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.flags.StateFlag;
-import com.sk89q.worldguard.protection.regions.RegionContainer;
-import com.sk89q.worldguard.protection.regions.RegionQuery;
-import io.github.bananapuncher714.nbteditor.NBTEditor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -67,7 +58,9 @@ public class SplashEvent implements Listener {
                         Misc.send(shooter, ConfigManager.get("messages.yml").getString("NotAllowedToThrow"), true);
 
                         CustomPotionItem potionItem = new CustomPotionItem(customPotion);
-                        ItemStack potion = potionItem.build();
+                        // not sure if this is the best way to do this
+                        // because it updates the placeholders
+                        ItemStack potion = potionItem.build(shooter);
                         potion = AetherPotions.instance.getNbtHandler().set(potion, id, "potionid");
                         if (shooter.getInventory().firstEmpty() == -1){
                             Objects.requireNonNull(shooter.getLocation().getWorld()).dropItemNaturally(shooter.getLocation(), potion);

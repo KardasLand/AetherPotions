@@ -9,6 +9,8 @@ potions:
     isSplash: false
     # If it is drinkable, will it delete the bottle?
     deleteBottle: true
+    # Cooldown in seconds.
+    cooldown: 10
     data:
       # Potion type. Things like Speed, Strength etc...
       # Do not put prefixes like STRONG, LONG etc. Just put the plain old potion type and configure level/time below.
@@ -52,6 +54,7 @@ potions:
       - "&5Trying splash feature"
     isSplash: true
     deleteBottle: false
+    cooldown: 10
     data:
       potionType: "STRENGTH"
     particle:

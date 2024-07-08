@@ -143,7 +143,7 @@ public class MainCommand implements CommandExecutor {
                 Misc.send(player, "&cThis potion does not exist.", true);
                 return false;
             }
-            ItemStack potion = potionItem.build();
+            ItemStack potion = potionItem.build(player);
             potion = AetherPotions.instance.getNbtHandler().set(potion, id, "potionid");
             for (int i = 0; i < amount; i++){
                 if (target.getInventory().firstEmpty() == -1){

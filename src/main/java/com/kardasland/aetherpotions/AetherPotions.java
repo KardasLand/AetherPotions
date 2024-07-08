@@ -6,9 +6,10 @@ import com.kardasland.aetherpotions.events.SplashEvent;
 import com.kardasland.aetherpotions.utility.ConfigManager;
 import com.kardasland.aetherpotions.utility.Misc;
 import com.kardasland.aetherpotions.utility.NBT.NBTEditorWrapper;
-import com.kardasland.aetherpotions.utility.protection.ProtectionHandler;
 import com.kardasland.aetherpotions.utility.NBT.NBTHandler;
 import com.kardasland.aetherpotions.utility.NBT.PSCEditorWrapper;
+import com.kardasland.aetherpotions.utility.PlaceholderHook;
+import com.kardasland.aetherpotions.utility.protection.ProtectionHandler;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,15 +30,33 @@ public final class AetherPotions extends JavaPlugin {
     public static AetherPotions instance;
     NBTHandler nbtHandler;
     ProtectionHandler protectionHandler;
+
     @Override
     public void onEnable() {
         instance = this;
         initConfigs();
+        updateConfig();
         initEvents();
         initCommands();
         initNBTHandler();
+        initHooks();
         this.protectionHandler = new ProtectionHandler();
         this.protectionHandler.initProtectionHandlers();
+    }
+
+    /**
+     * Update the config file if needed
+     */
+    private void updateConfig() {
+        // 3.1.0 -> 3.1.1
+        ConfigManager.update("messages.yml", "StillInCooldown", "You are still in cooldown! Remaining seconds: &b%time%");
+    }
+
+    private void initHooks() {
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            Misc.send(null, "PlaceholderAPI found, enabling placeholders.", false);
+            new PlaceholderHook().register();
+        }
     }
 
 

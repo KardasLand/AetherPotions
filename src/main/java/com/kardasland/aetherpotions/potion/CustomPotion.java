@@ -30,6 +30,7 @@ public class CustomPotion {
     private boolean isSplash;
     private CustomParticle particle;
     private CustomCommandList commandList;
+    private int customModelData;
     private PotionType type;
 
     private boolean isExtended = false;
@@ -60,6 +61,9 @@ public class CustomPotion {
         this.lore = cf.getStringList(shortcut + "lore");
         this.isSplash = cf.getBoolean(shortcut + "isSplash");
         String potionType = cf.getString(shortcut + "data.potionType");
+        if (cf.isSet(shortcut + "data.customModelData")){
+            this.customModelData = cf.getInt(shortcut + "data.customModelData");
+        }
         if (cf.isSet(shortcut + "data.extended")){
             this.isExtended = cf.getBoolean(shortcut + "data.extended");
         }
@@ -75,6 +79,8 @@ public class CustomPotion {
             this.particle = new CustomParticle(id);
             this.commandList = new CustomCommandList(id, isSplash);
         }
+        // HOW IN THE ACTUAL FUCK THAT I FORGOT ABOUT IT?!?!?!?
+        this.time = cf.isSet(shortcut + "cooldown") ? cf.getInt(shortcut + "cooldown") : 0;
     }
 
     public void apply(Player p, PlayerItemConsumeEvent event){
@@ -83,7 +89,9 @@ public class CustomPotion {
                     Objects.requireNonNull(ConfigManager.get("messages.yml")).getString("StillInCooldown")
                             .replace("%time%", String.valueOf(CooldownHandler.getTimeLeft(p.getUniqueId(), getId()))), true);
         }else {
-
+            // HOW THE FUCK I FORGOT THE COOLDOWNS?!?!?!?!
+            // THE PROBLEM IS, HOW TF NO ONE TRIED COOLDOWN FOR **NEARLY A YEAR**?
+            // I guess no one really uses it lmao
             if (getTime() != 0){
                 CooldownHandler c = new CooldownHandler(p.getUniqueId(), getId(), getTime());
                 c.start();
