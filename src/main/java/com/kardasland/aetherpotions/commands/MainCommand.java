@@ -6,7 +6,6 @@ import com.kardasland.aetherpotions.potion.CustomPotionItem;
 import com.kardasland.aetherpotions.potion.PotionValidation;
 import com.kardasland.aetherpotions.utility.ConfigManager;
 import com.kardasland.aetherpotions.utility.Misc;
-import io.github.bananapuncher714.nbteditor.NBTEditor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -126,7 +125,7 @@ public class MainCommand implements CommandExecutor {
             }
             Misc.send(player, "&bAfterEffect enabled: " + (customPotion.getCommandList().getAfterEffect().isEnabled() ? "&atrue" : "&cfalse"), false);
             if (customPotion.getCommandList().getAfterEffect().isEnabled() && detailed){
-                Misc.send(player, "&bAfterEffect commands list: &7" + customPotion.getCommandList().getAfterEffect().getCommands().toString(), false);
+                Misc.send(player, "&bAfterEffect commands list: &7" + customPotion.getCommandList().getAfterEffect().getCommandList().toString(), false);
             }
 
         }else {

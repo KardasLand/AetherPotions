@@ -2,16 +2,22 @@ potions:
   # Drinkable potion example
   # potion id. Needs to be unique.
   drink:
-    displayName: "&cDrink"
+    # You can use placeholders in display name and lore.
+    displayName: "&cDrink - %player_name%"
     lore:
       - "&5Drink potion attempt"
     # Will potion be splash or drinkable?
     isSplash: false
     # If it is drinkable, will it delete the bottle?
     deleteBottle: true
+    # If you want to make it instant drinkable,
+    # aka right click consume, you can use this option.
+    instantDrink: false
     # Cooldown in seconds.
     cooldown: 10
     data:
+      # Custom model data. You can use this for custom textures.
+      customModelData: 1
       # Potion type. Things like Speed, Strength etc...
       # Do not put prefixes like STRONG, LONG etc. Just put the plain old potion type and configure level/time below.
       # List: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionType.html
@@ -35,7 +41,7 @@ potions:
     commands:
       # If it is splash, you can remove this line.
       drinkingCommands:
-        - "msg %player% ae"
+        - "msg %player% ae::50::"
       # If it is drinkable, you can remove this line.
       splashCommands:
         - ""

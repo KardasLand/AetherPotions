@@ -14,6 +14,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -50,7 +51,7 @@ public class SplashEvent implements Listener {
                 if (e instanceof Player){
                     if (isAllowed(((Player) e).getPlayer(), event.getEntity().getLocation(), true)){
                         // we can safely do null because it cannot and will not use the event cause of the splash feature
-                        customPotion.apply(Objects.requireNonNull(((Player) e).getPlayer()), null);
+                        customPotion.apply(Objects.requireNonNull(((Player) e).getPlayer()), (PlayerItemConsumeEvent) null);
                     }else if (oneTime){
                         // This is a joke
                         oneTime = false;

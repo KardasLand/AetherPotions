@@ -1,4 +1,4 @@
-package com.kardasland.aetherpotions.utility.NBT;
+package com.kardasland.aetherpotions.utility.nbt;
 
 import com.kardasland.aetherpotions.AetherPotions;
 import org.bukkit.NamespacedKey;

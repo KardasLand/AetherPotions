@@ -12,6 +12,11 @@ import org.bukkit.potion.PotionType;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * Need to add more error checking and validation.
+ * Lacks update.
+ */
 @Data
 public class PotionValidation {
     CustomPotion customPotion;
@@ -20,6 +25,7 @@ public class PotionValidation {
     List<Errors> potionErrors;
     String id;
     FileConfiguration cf;
+
 
 
     public PotionValidation(String id){
