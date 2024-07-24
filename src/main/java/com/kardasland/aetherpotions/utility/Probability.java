@@ -46,7 +46,20 @@ public class Probability {
             // not sure yet, what to do, when the element already exists, since a list can't contain 2 equal entries. Right now a second, identical chance (element + chance must be equal) will be ignored
         }
     }
-    public Object getRandomElement() {
+
+    /**
+     * Get a random element from the list of chances
+     * @param fillPercentage If true, the sum of all chances will be 100, if the sum is less than 100
+     * @return
+     */
+    public Object getRandomElement(boolean fillPercentage) {
+        if (fillPercentage) {
+            // if sum is not 100, fill the rest with 100 - sum
+            if (this.sum < 100) {
+                this.chances.add(new Chance(null, this.sum, 100));
+                this.sum = 100;
+            }
+        }
         int index = this.random.nextInt(this.sum);
         // debug: System.out.println("Amount of chances: " + Integer.toString(this.chances.size()) + ", possible options: " + Integer.toString(this.sum) + ", chosen option: " + Integer.toString(index));
         for (Chance chance : this.chances) {

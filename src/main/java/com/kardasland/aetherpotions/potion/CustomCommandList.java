@@ -72,7 +72,7 @@ public class CustomCommandList {
     public List<String> drawCommandList(){
         if (includeChance){
             List<String> commands = new ArrayList<>();
-            String chance = (String) beforeProbability.getRandomElement();
+            String chance = (String) beforeProbability.getRandomElement(false);
             commands.add(chance);
             return commands;
         }else {
@@ -100,8 +100,7 @@ public class CustomCommandList {
         // From this point, the code is not complete.
         public String drawCommandList(){
             if (enabled){
-                String command = (String) probability.getRandomElement();
-                return command;
+                return (String) probability.getRandomElement(false);
             }else {
                 return null;
             }
