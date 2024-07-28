@@ -8,6 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -34,9 +35,9 @@ public class CCommandList {
             int weight = section.isSet("weight") ? section.getInt("weight") : 0;
             CCommand.Executor executor = CCommand.Executor.valueOf(section.getString("executor"));
             if (isSplash){
-                this.splashCommandList.add(new CCommand(Integer.parseInt(order), section.getString("command"), chance, weight, executor));
+                this.splashCommandList.add(new CCommand(Integer.parseInt(order), section.getStringList("commands"), chance, weight, executor));
             }else {
-                this.drinkingCommandList.add(new CCommand(Integer.parseInt(order), section.getString("command"), chance, weight, executor));
+                this.drinkingCommandList.add(new CCommand(Integer.parseInt(order), section.getStringList("commands"), chance, weight, executor));
             }
         }
     }
@@ -55,7 +56,7 @@ public class CCommandList {
         for (String command : commandList){
             AetherPotions.instance.getLogger().info("Migrating command: "+command);
             CCommand cCommand = new CCommand();
-            cCommand.setCommand(command);
+            cCommand.setCommand(Collections.singletonList(command));
             cCommand.setOrder(order++);
             cCommand.setChance(0);
             cCommand.setWeight(0);
@@ -64,7 +65,7 @@ public class CCommandList {
             }else {
                 this.drinkingCommandList.add(cCommand);
             }
-            ConfigManager.set("potions.yml", shortcut+"."+cCommand.getOrder()+".command", command);
+            ConfigManager.set("potions.yml", shortcut+"."+cCommand.getOrder()+".commands", List.of(command));
             ConfigManager.set("potions.yml", shortcut+"."+cCommand.getOrder()+".chance", 0);
             ConfigManager.set("potions.yml", shortcut+"."+cCommand.getOrder()+".weight", 0);
             ConfigManager.set("potions.yml", shortcut+"."+cCommand.getOrder()+".executor", CCommand.Executor.CONSOLE.toString());
@@ -150,7 +151,7 @@ public class CCommandList {
                 int chance = section.isSet("chance") ? section.getInt("chance") : 0;
                 int weight = section.isSet("weight") ? section.getInt("weight") : 0;
                 CCommand.Executor executor = CCommand.Executor.valueOf(section.getString("executor", CCommand.Executor.CONSOLE.toString()));
-                this.commandList.add(new CCommand(Integer.parseInt(order), section.getString("command"), chance, weight, executor));
+                this.commandList.add(new CCommand(Integer.parseInt(order), section.getStringList("commands"), chance, weight, executor));
             }
         }
 
@@ -165,12 +166,12 @@ public class CCommandList {
             int order = 1;
             for (String command : commandList){
                 CCommand cCommand = new CCommand();
-                cCommand.setCommand(command);
+                cCommand.setCommand(Collections.singletonList(command));
                 cCommand.setOrder(order++);
                 cCommand.setChance(0);
                 cCommand.setWeight(0);
                 this.commandList.add(cCommand);
-                ConfigManager.set("potions.yml", shortcut+"."+cCommand.getOrder()+".command", command);
+                ConfigManager.set("potions.yml", shortcut+"."+cCommand.getOrder()+".commands", List.of(command));
                 ConfigManager.set("potions.yml", shortcut+"."+cCommand.getOrder()+".chance", 0);
                 ConfigManager.set("potions.yml", shortcut+"."+cCommand.getOrder()+".weight", 0);
                 ConfigManager.set("potions.yml", shortcut+"."+cCommand.getOrder()+".executor", CCommand.Executor.CONSOLE.toString());

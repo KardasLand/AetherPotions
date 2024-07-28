@@ -35,7 +35,7 @@ public class AetherTabCompleter implements TabCompleter {
                     case "migrate" -> {
                         List<String> completions = new ArrayList<>(potionList);
                         completions.add("all");
-                        yield potionList;
+                        yield completions;
                     }
                     case "give" -> Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).toList();
                     default -> new ArrayList<>();

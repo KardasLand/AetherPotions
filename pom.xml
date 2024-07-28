@@ -6,7 +6,7 @@
 
     <groupId>com.kardasland</groupId>
     <artifactId>AetherPotions</artifactId>
-    <version>3.3.0</version>
+    <version>4.0.0-beta</version>
     <packaging>jar</packaging>
 
     <name>AetherPotions</name>

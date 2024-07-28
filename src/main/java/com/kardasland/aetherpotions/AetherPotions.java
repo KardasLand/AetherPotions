@@ -3,6 +3,7 @@ package com.kardasland.aetherpotions;
 import com.kardasland.aetherpotions.commands.AetherTabCompleter;
 import com.kardasland.aetherpotions.commands.AetherCommand;
 import com.kardasland.aetherpotions.events.DrinkEvent;
+import com.kardasland.aetherpotions.events.ServerNotifier;
 import com.kardasland.aetherpotions.events.SplashEvent;
 import com.kardasland.aetherpotions.utility.ConfigManager;
 import com.kardasland.aetherpotions.utility.Misc;
@@ -85,6 +86,7 @@ public final class AetherPotions extends JavaPlugin {
     private void initEvents() {
         Bukkit.getPluginManager().registerEvents(new DrinkEvent(), this);
         Bukkit.getPluginManager().registerEvents(new SplashEvent(), this);
+        Bukkit.getPluginManager().registerEvents(new ServerNotifier(), this);
     }
 
     private void initConfigs() {
