@@ -42,12 +42,14 @@ potions:
       # Commands to be executed after drinking the potion.
       drinkingCommands:
         '1':
-          command: give %player% diamond 5
+          commands:
+            - give %player% diamond 5
           chance: 0
           weight: 0
           executor: CONSOLE
         '2':
-          command: msg %player% You drank the potion!
+          commands:
+            - msg %player% You drank the potion!
           executor: CONSOLE
           chance: 0
           weight: 0
@@ -58,7 +60,8 @@ potions:
         time: 5
         commands:
           '1':
-            command: give %player% diamond 5
+            commands:
+              - give %player% diamond 5
             executor: CONSOLE
   # Splash potion example. Pretty much same.
   # You need to enable potion-splash flag on regions you want to enable splash potions!
@@ -82,13 +85,15 @@ potions:
         time: 8
         commands:
           '1':
-            command: msg %player% afterEffect
+            commands:
+              - msg %player% afterEffect
             chance: 0
             weight: 0
             executor: CONSOLE
       splashCommands:
         '1':
-          command: give %player% iron_ingot 5
+          commands:
+            - give %player% iron_ingot 5
           chance: 0
           weight: 0
           executor: CONSOLE
@@ -114,30 +119,33 @@ potions:
         time: 240
         commands:
           '1':
-            command: fly %player% disable
+            commands:
+              - fly %player% disable
             chance: 0
             weight: 0
             executor: CONSOLE
           '2':
-            command: w %player% You're starting to feel pretty normal again. Perhaps
-              another potion?
+            commands:
+                - w %player% You're starting to feel pretty normal again. Perhaps another potion?
             chance: 0
             weight: 0
             executor: CONSOLE
       drinkingCommands:
         '1':
-          command: fly %player% enable
+          commands:
+            - fly %player% enable
           chance: 0
           weight: 0
           executor: CONSOLE
         '2':
-          command: w %player% You get this whimsical feeling flowing through your
-            body.. you're glowing.. and you can fly!!
+          commands:
+            - w %player% You get this whimsical feeling flowing through your body.. you're glowing.. and you can fly!!
           chance: 0
           weight: 0
           executor: CONSOLE
         '3':
-          command: effect give %player% minecraft:glowing 300
+          commands:
+            - effect give %player% minecraft:glowing 300
           chance: 0
           weight: 0
           executor: CONSOLE
