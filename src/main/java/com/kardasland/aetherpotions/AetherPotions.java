@@ -1,6 +1,7 @@
 package com.kardasland.aetherpotions;
 
-import com.kardasland.aetherpotions.commands.MainCommand;
+import com.kardasland.aetherpotions.commands.AetherTabCompleter;
+import com.kardasland.aetherpotions.commands.AetherCommand;
 import com.kardasland.aetherpotions.events.DrinkEvent;
 import com.kardasland.aetherpotions.events.SplashEvent;
 import com.kardasland.aetherpotions.utility.ConfigManager;
@@ -77,7 +78,8 @@ public final class AetherPotions extends JavaPlugin {
     }
 
     private void initCommands() {
-        Objects.requireNonNull(getCommand("aetherpotions")).setExecutor(new MainCommand());
+        Objects.requireNonNull(getCommand("aetherpotions")).setExecutor(new AetherCommand());
+        Objects.requireNonNull(getCommand("aetherpotions")).setTabCompleter(new AetherTabCompleter());
     }
 
     private void initEvents() {

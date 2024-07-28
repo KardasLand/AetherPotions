@@ -41,7 +41,13 @@ potions:
     commands:
       # If it is splash, you can remove this line.
       drinkingCommands:
-        - "msg %player% ae::50::"
+        1:
+          command: "give %player% diamond 5"
+          executor: "CONSOLE"
+        2:
+          command: "msg %player% You drank the potion!"
+          executor: "CONSOLE"
+          chance: 50
       # If it is drinkable, you can remove this line.
       splashCommands:
         - ""
@@ -51,7 +57,9 @@ potions:
         # Time in seconds.
         time: 5
         commands:
-          - "give %player% diamond 5"
+          1:
+            command: "give %player% diamond 5"
+            executor: "CONSOLE"
   # Splash potion example. Pretty much same.
   # You need to enable potion-splash flag on regions you want to enable splash potions!
   splash:

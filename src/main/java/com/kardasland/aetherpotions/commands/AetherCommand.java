@@ -18,13 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MainCommand implements CommandExecutor {
+public class AetherCommand implements CommandExecutor {
 
-    List<String> helpList;
 
-    public MainCommand() {
-        initHelpList();
-    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
@@ -36,33 +32,40 @@ public class MainCommand implements CommandExecutor {
             return true;
         }
         switch (args[0]) {
-            case "give": {
-                if (Misc.checkPerm(player, "aetherpotions.give")){
+            case "give" -> {
+                if (Misc.checkPerm(player, "aetherpotions.give")) {
                     try {
-
                         // how did i forget this basic error checking
                         // /aetherpotions give <player> <potion> [amount]
-                        if (args.length < 3){
+                        if (args.length < 3) {
                             Misc.send(player, "Please enter a player name and potion id.", true);
                             return true;
                         }
                         int amount = args.length == 3 ? 1 : Integer.parseInt(args[3]);
                         givePotion(player, args[1], args[2], amount);
-                    }catch (NumberFormatException exception){
+                    } catch (NumberFormatException exception) {
                         Misc.send(player, "Amount parameter is not a number.", true);
                     }
                 }
-                break;
             }
-            case "list": {
-                if (Misc.checkPerm(player, "aetherpotions.list")){
+            case "list" -> {
+                if (Misc.checkPerm(player, "aetherpotions.list")) {
                     list(player);
                 }
-                break;
             }
-            case "info": {
-                if (Misc.checkPerm(player, "aetherpotions.info")){
-                    if (args.length <= 1){
+            case "migrate" -> {
+                if (Misc.checkPerm(player, "aetherpotions.migrate")) {
+                    // /aetherpotions migrate <id/all>
+                    if (args.length == 1) {
+                        Misc.send(player, "Please enter a potion id or all.", true);
+                        return true;
+                    }
+                    migration(player, args);
+                }
+            }
+            case "info" -> {
+                if (Misc.checkPerm(player, "aetherpotions.info")) {
+                    if (args.length <= 1) {
                         Misc.send(player, "Please enter a potion id.", true);
                         return true;
                     }
@@ -71,24 +74,44 @@ public class MainCommand implements CommandExecutor {
                     boolean detailed = args.length == 3 && Boolean.parseBoolean(args[2]);
                     info(player, id, detailed);
                 }
-                break;
             }
-            case "reload":{
-                if (Misc.checkPerm(player, "aetherpotions.reload")){
+            case "reload" -> {
+                if (Misc.checkPerm(player, "aetherpotions.reload")) {
                     Misc.send(player, AetherPotions.instance.reloadPlugin() ? "Reloaded successfully!" : "Some issue occured, please check the console.", true);
                 }
-                break;
             }
-            default: {
-                if (Misc.checkPerm(player, "aetherpotions.help")){
+            default -> {
+                if (Misc.checkPerm(player, "aetherpotions.help")) {
                     helpScreen(player);
                 }
-                break;
             }
         }
         return true;
     }
 
+
+
+
+
+    private void migration(Player player, String[] args) {
+        if (args[1].equalsIgnoreCase("all")){
+            for (String id : Objects.requireNonNull(ConfigManager.get("potions.yml")).getConfigurationSection("potions.").getKeys(false)){
+                CustomPotion customPotion = new CustomPotion(id, false, true);
+                customPotion.migratePotion();
+            }
+            Misc.send(player, "All potions migrated successfully.", true);
+        }else {
+            CustomPotion customPotion = new CustomPotion(args[1], false, true);
+            if (customPotion.migratePotion()){
+                Misc.send(player, "Potion migrated successfully.", true);
+            }else {
+                Misc.send(player, "Potion could not be migrated. Manual fix may be required.", true);
+            }
+        }
+    }
+
+
+    // Make the following methods GUI based, getting too complicated now.
     private void info(Player player, String id, boolean detailed){
         PotionValidation potionValidation = new PotionValidation(id);
         if (potionValidation.isExists()){
@@ -96,11 +119,10 @@ public class MainCommand implements CommandExecutor {
             Misc.send(player, "&bPotion Info &7- &b" + id, false);
             Misc.send(player, " ", false);
             if (!potionValidation.isValid()){
-                StringBuilder sm = new StringBuilder();
+                Misc.send(player, "&cThere are errors while building the potion. Full List:", true);
                 for (PotionValidation.Errors errors : potionValidation.getPotionErrors()){
-                    sm.append(errors.toString()).append(", ");
+                    Misc.send(player, "&b" + errors.toString() + ": &7" + errors.getMessage(), true);
                 }
-                Misc.send(player, "&bThere are &cerrors! &bThere are some missing/invalid configurations: &c" + sm.substring(0, sm.length() - 2) + "&7.", false);
                 return;
             }
             Misc.send(player, "&bDisplay name: &7" + customPotion.getDisplayName(), false);
@@ -133,14 +155,14 @@ public class MainCommand implements CommandExecutor {
         }
     }
 
-    private boolean givePotion(Player player, String targetName, String id, int amount){
+    private void givePotion(Player player, String targetName, String id, int amount){
         Player target = Bukkit.getPlayer(targetName);
         if (target != null && target.isOnline()){
             CustomPotionItem potionItem = new CustomPotionItem(id, true);
             PotionValidation potionValidation = new PotionValidation(id);
             if (!(potionValidation.isExists() && potionValidation.isValid())){
                 Misc.send(player, "&cThis potion does not exist.", true);
-                return false;
+                return;
             }
             ItemStack potion = potionItem.build(player);
             potion = AetherPotions.instance.getNbtHandler().set(potion, id, "potionid");
@@ -151,10 +173,8 @@ public class MainCommand implements CommandExecutor {
                     target.getInventory().addItem(potion);
                 }
             }
-            return true;
         }else {
             Misc.send(player, "&cThis player is not online.", true);
-            return false;
         }
     }
 
@@ -172,22 +192,32 @@ public class MainCommand implements CommandExecutor {
     }
 
     private void helpScreen(Player player){
-        for (String message : helpList){
-            Misc.send(player, message, false);
-        }
-    }
+        ArrayList<String> helpList = new ArrayList<>();
+       helpList.add("&bAetherPotions &f(&7" + AetherPotions.instance.getDescription().getVersion() + "&f) &7- &bKardasLand");
+       helpList.add(" ");
+       if (Misc.checkPerm(player, "aetherpotions.give", true)) {
+           helpList.add("&b/aetherpotions give <player> <potion> [amount]");
+           helpList.add("&7> Gives a certain amount of potion to a player.");
+       }
+       if (Misc.checkPerm(player, "aetherpotions.info", true)) {
+           helpList.add("&b/aetherpotions info <potion> [detailed]");
+           helpList.add("&7> Gives brief info about the potion. You can add true after potion id if you want a detailed info.");
+       }
+       if (Misc.checkPerm(player, "aetherpotions.reload", true)) {
+           helpList.add("&b/aetherpotions reload");
+           helpList.add("&7> Reloads the whole plugin.");
+       }
+       if (Misc.checkPerm(player, "aetherpotions.list", true)) {
+           helpList.add("&b/aetherpotions list");
+           helpList.add("&7> Gives the list of potions.");
+       }
+       if (Misc.checkPerm(player, "aetherpotions.migrate", true)) {
+           helpList.add("&b/aetherpotions migrate <id/all>");
+           helpList.add("&7> Migrates the potion to the new system.");
+       }
+       for (String s : helpList) {
+           Misc.send(player, s, false);
+       }
 
-    private void initHelpList() {
-        this.helpList = new ArrayList<>();
-        this.helpList.add("&bAetherPotions &f(&7" + AetherPotions.instance.getDescription().getVersion() + "&f) &7- &bKardasLand");
-        this.helpList.add(" ");
-        this.helpList.add("&b/aetherpotions give <player> <potion> [amount]");
-        this.helpList.add("&7> Gives a certain amount of potion to a player.");
-        this.helpList.add("&b/aetherpotions info <potion> [detailed]");
-        this.helpList.add("&7> Gives brief info about the potion. You can add true after potion id if you want a detailed info.");
-        this.helpList.add("&b/aetherpotions reload");
-        this.helpList.add("&7> Reloads the whole plugin.");
-        this.helpList.add("&b/aetherpotions list");
-        this.helpList.add("&7> Gives the list of potions.");
     }
 }
