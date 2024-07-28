@@ -39,18 +39,18 @@ potions:
       # Particle amount per second. You have to try and test this setting.
       amount: 20
     commands:
-      # If it is splash, you can remove this line.
+      # Commands to be executed after drinking the potion.
       drinkingCommands:
         '1':
           command: give %player% diamond 5
+          chance: 0
+          weight: 0
           executor: CONSOLE
         '2':
           command: msg %player% You drank the potion!
           executor: CONSOLE
-          chance: 50
-      # If it is drinkable, you can remove this line.
-      splashCommands:
-        - ''
+          chance: 0
+          weight: 0
       afterEffect:
         # After Effect feature.
         enabled: true
@@ -77,8 +77,6 @@ potions:
       time: 10
       amount: 50
     commands:
-      drinkingCommands:
-        - ''
       afterEffect:
         enabled: true
         time: 8
@@ -102,6 +100,7 @@ potions:
       - '&9Flight I (04:00)'
     isSplash: false
     deleteBottle: false
+    instantDrink: false
     data:
       potionType: LUCK
     particle:
@@ -110,8 +109,6 @@ potions:
       time: 240
       amount: 50
     commands:
-      splashCommands:
-        - ''
       afterEffect:
         enabled: true
         time: 240
