@@ -12,7 +12,7 @@ import java.util.List;
 // Update: class was fucking mess. Totally overhauled and deserved.
 // It is here for archive reasons, will be deleted in future versions.
 
-@Deprecated // This class is deprecated and will be removed in the future.
+@Deprecated(since = "3.2.2", forRemoval = true) // This class is deprecated and will be removed in the future.
 @Data
 public class CustomCommandListOld {
 

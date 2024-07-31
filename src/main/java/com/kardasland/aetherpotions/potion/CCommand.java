@@ -38,7 +38,8 @@ public class CCommand {
 
     public void execute(Player target){
         for (String s : command) {
-            AetherPotions.instance.getServer().dispatchCommand(executor.equals(Executor.CONSOLE) ? AetherPotions.instance.getServer().getConsoleSender() : target, s.replace("%player%", target.getName()));
+            s = s.replace("%player%", target.getName()).replace("%target%", target.getName());
+            AetherPotions.instance.getServer().dispatchCommand(executor.equals(Executor.CONSOLE) ? AetherPotions.instance.getServer().getConsoleSender() : target, s);
         }
     }
 

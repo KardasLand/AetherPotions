@@ -27,7 +27,6 @@ public class SplashEvent implements Listener {
             if (event.getEntity() instanceof ThrownPotion) {
                 Player player = (Player) event.getEntity().getShooter();
                 ItemStack item = player.getInventory().getItemInMainHand();
-                // NBTEditor.contains(item, "potionid")
                 if (item.getItemMeta() != null && AetherPotions.instance.getNbtHandler().contains(item, "potionid")){
                     if (isAllowed((Player) event.getEntity().getShooter(), event.getLocation(), true)){
                         event.getEntity().setMetadata("aetherpotion", new FixedMetadataValue(AetherPotions.instance, AetherPotions.instance.getNbtHandler().getString(item, "potionid")));
