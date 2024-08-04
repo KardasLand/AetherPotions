@@ -33,11 +33,12 @@ public class CCommandList {
             assert section != null;
             int chance = section.isSet("chance") ? section.getInt("chance") : 0;
             int weight = section.isSet("weight") ? section.getInt("weight") : 0;
+            int delay = section.isSet("delay") ? section.getInt("delay") : 0;
             CCommand.Executor executor = CCommand.Executor.valueOf(section.getString("executor"));
             if (isSplash){
-                this.splashCommandList.add(new CCommand(Integer.parseInt(order), section.getStringList("commands"), chance, weight, executor));
+                this.splashCommandList.add(new CCommand(Integer.parseInt(order), section.getStringList("commands"), chance, weight, executor, delay));
             }else {
-                this.drinkingCommandList.add(new CCommand(Integer.parseInt(order), section.getStringList("commands"), chance, weight, executor));
+                this.drinkingCommandList.add(new CCommand(Integer.parseInt(order), section.getStringList("commands"), chance, weight, executor, delay));
             }
         }
     }
@@ -150,8 +151,9 @@ public class CCommandList {
                 assert section != null;
                 int chance = section.isSet("chance") ? section.getInt("chance") : 0;
                 int weight = section.isSet("weight") ? section.getInt("weight") : 0;
+                int delay = section.isSet("delay") ? section.getInt("delay") : 0;
                 CCommand.Executor executor = CCommand.Executor.valueOf(section.getString("executor", CCommand.Executor.CONSOLE.toString()));
-                this.commandList.add(new CCommand(Integer.parseInt(order), section.getStringList("commands"), chance, weight, executor));
+                this.commandList.add(new CCommand(Integer.parseInt(order), section.getStringList("commands"), chance, weight, executor, delay));
             }
         }
 

@@ -7,6 +7,7 @@ import com.kardasland.aetherpotions.utility.CooldownHandler;
 import com.kardasland.aetherpotions.utility.Misc;
 import lombok.Data;
 import org.apache.commons.lang.NotImplementedException;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -19,7 +20,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 import java.util.Objects;
-
 
 
 @SuppressWarnings({"checkstyle:Indentation", "checkstyle:MissingJavadocType"})
@@ -103,6 +103,57 @@ public class CustomPotion {
         return !this.commandList.migrateOverhaul().equals(CCommandList.MigrationStatus.FAILED) && !this.commandList.afterEffect.migrateOverhaul().equals(CCommandList.MigrationStatus.FAILED);
     }
 
+
+    // alright fuck it I cant find a way to effectively chain delays.
+    // RECURSIVE TIME MOTHERFUCKER
+    // HAAHAJH RECURSIVE OGO OBRRRRRRRRRRRRRRRRRRRR
+    public void execute(Player target, List<CCommand> e){
+        if (e.isEmpty()){
+            return;
+        }
+        CCommand ccommand = e.get(0);
+
+        if (ccommand.getDelay() > 0){
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    for (String command : ccommand.getCommand()){
+                        command = command.replace("%player%", target.getName()).replace("%target%", target.getName());
+                        AetherPotions.instance.getServer().dispatchCommand(ccommand.getExecutor().equals(CCommand.Executor.CONSOLE) ? AetherPotions.instance.getServer().getConsoleSender() : target, command);
+                    }
+                    e.remove(0);
+                    execute(target, e);
+                }
+            }.runTaskLater(AetherPotions.instance, ccommand.getDelay() * 20L);
+            return;
+        }
+        for (String command : ccommand.getCommand()){
+            command = command.replace("%player%", target.getName()).replace("%target%", target.getName());
+            AetherPotions.instance.getServer().dispatchCommand(ccommand.getExecutor().equals(CCommand.Executor.CONSOLE) ? AetherPotions.instance.getServer().getConsoleSender() : target, command);
+        }
+        e.remove(0);
+        if (!ccommand.isDelayed()) execute(target, e);
+
+        /*for (String s : ccommand.getCommand()) {
+            final String command = s.replace("%player%", target.getName()).replace("%target%", target.getName());
+            if (ccommand.getDelay() > 0) {
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        AetherPotions.instance.getServer().dispatchCommand(ccommand.getExecutor().equals(CCommand.Executor.CONSOLE) ? AetherPotions.instance.getServer().getConsoleSender() : target, command);
+                        e.remove(0);
+                        execute(target, e);
+                    }
+                }.runTaskLater(AetherPotions.instance, ccommand.getDelay() * 20L);
+                return;
+            }
+            AetherPotions.instance.getServer().dispatchCommand(ccommand.getExecutor().equals(CCommand.Executor.CONSOLE) ? AetherPotions.instance.getServer().getConsoleSender() : target, command);
+            e.remove(0);
+            if (!ccommand.isDelayed()) execute(target, e);
+        }*/
+
+    }
+
     /**
      * I wanted to do internally.
      * @param p Player
@@ -121,9 +172,7 @@ public class CustomPotion {
             c.start();
         }
 
-        for (CCommand command : commandList.drawCommandList((isSplash) ? commandList.getSplashCommandList() : commandList.getDrinkingCommandList())) {
-            command.execute(p);
-        }
+        execute(p, commandList.drawCommandList((isSplash) ? commandList.getSplashCommandList() : commandList.getDrinkingCommandList()));
 
         if (!isSplash) {
             if (p.getInventory().getItemInMainHand().equals(item)) {
@@ -141,18 +190,17 @@ public class CustomPotion {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    for (CCommand command : commandList.drawCommandList(getCommandList().getAfterEffect().getCommandList())) {
-                        command.execute(p);
-                    }
+                    execute(p, commandList.drawCommandList(getCommandList().getAfterEffect().getCommandList()));
                 }
             }.runTaskLater(AetherPotions.instance, 20L * this.getCommandList().getAfterEffect().getTime());
         }
     }
 
-    // Decided to separate the apply method, because of the event handling.
-    // I only need the item, but maybe in the future, I will need the event too.
-    // I will probably change the methods, but for now, it's okay.
-    public void apply(Player p, PlayerItemConsumeEvent event) {
+     /** Decided to separate the apply method, because of the event handling.
+     I only need the item, but maybe in the future, I will need the event too.
+     I will probably change the methods, but for now, it's okay.
+     */
+     public void apply(Player p, PlayerItemConsumeEvent event) {
         applyEffect(p, event!= null ? event.getItem() : null);
     }
 
