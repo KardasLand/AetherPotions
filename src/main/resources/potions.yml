@@ -62,6 +62,7 @@ potions:
           '1':
             commands:
               - give %player% diamond 5
+              - msg %player% maybe you should drink another potion?
             executor: CONSOLE
   # Splash potion example. Pretty much same.
   # You need to enable potion-splash flag on regions you want to enable splash potions!
@@ -121,12 +122,7 @@ potions:
           '1':
             commands:
               - fly %player% disable
-            chance: 0
-            weight: 0
-            executor: CONSOLE
-          '2':
-            commands:
-                - w %player% You're starting to feel pretty normal again. Perhaps another potion?
+              - w %player% You're starting to feel pretty normal again. Perhaps another potion?
             chance: 0
             weight: 0
             executor: CONSOLE
@@ -140,11 +136,6 @@ potions:
         '2':
           commands:
             - w %player% You get this whimsical feeling flowing through your body.. you're glowing.. and you can fly!!
-          chance: 0
-          weight: 0
-          executor: CONSOLE
-        '3':
-          commands:
             - effect give %player% minecraft:glowing 300
           chance: 0
           weight: 0
