@@ -6,6 +6,7 @@ import com.kardasland.aetherpotions.utility.ConfigManager;
 import com.kardasland.aetherpotions.utility.CooldownHandler;
 import com.kardasland.aetherpotions.utility.Misc;
 import lombok.Data;
+import org.apache.commons.lang.NotImplementedException;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,7 +22,6 @@ import java.util.List;
 import java.util.Objects;
 
 
-
 @SuppressWarnings({"checkstyle:Indentation", "checkstyle:MissingJavadocType"})
 @Data
 public class CustomPotion {
@@ -33,7 +33,7 @@ public class CustomPotion {
     private boolean deleteBottle;
     private boolean isSplash;
     private CustomParticle particle;
-    private CustomCommandList commandList;
+    private CCommandList commandList;
     private int customModelData;
     private PotionType type;
 
@@ -46,11 +46,14 @@ public class CustomPotion {
 
 
     public CustomPotion(String id) {
-        init(id, false);
+        init(id, false, false);
     }
 
     public CustomPotion(String id, boolean reduced) {
-        init(id, reduced);
+        init(id, reduced, false);
+    }
+    public CustomPotion(String id, boolean reduced, boolean migrate) {
+        init(id, reduced, migrate);
     }
 
     /**
@@ -58,11 +61,12 @@ public class CustomPotion {
      *
      *  @param id The id of the potion
      *  @param reduced If the potion is reduced
+     *  @param migrate If we need to migrate the potion to bypass validation.
      */
-    public void init(String id, boolean reduced) {
+    public void init(String id, boolean reduced, boolean migrate) {
         this.id = id;
         PotionValidation potionValidation = new PotionValidation(id);
-        if (!potionValidation.isValid()) {
+        if (!migrate && !potionValidation.isValid()) {
             return;
         }
         FileConfiguration cf = ConfigManager.get("potions.yml");
@@ -89,16 +93,71 @@ public class CustomPotion {
         if (!reduced) {
             this.deleteBottle = !isSplash && cf.getBoolean(shortcut + "deleteBottle");
             this.particle = new CustomParticle(id);
-            this.commandList = new CustomCommandList(id, isSplash);
+            this.commandList = new CCommandList(id, isSplash);
         }
         // HOW IN THE ACTUAL FUCK THAT I FORGOT ABOUT IT?!?!?!?
         this.time = cf.isSet(shortcut + "cooldown") ? cf.getInt(shortcut + "cooldown") : 0;
     }
 
+    public boolean migratePotion(){
+        return !this.commandList.migrateOverhaul().equals(CCommandList.MigrationStatus.FAILED) && !this.commandList.afterEffect.migrateOverhaul().equals(CCommandList.MigrationStatus.FAILED);
+    }
+
+
+    // alright fuck it I cant find a way to effectively chain delays.
+    // RECURSIVE TIME MOTHERFUCKER
+    // HAAHAJH RECURSIVE OGO OBRRRRRRRRRRRRRRRRRRRR
+    public void execute(Player target, List<CCommand> e){
+        if (e.isEmpty()){
+            return;
+        }
+        CCommand ccommand = e.get(0);
+
+        if (ccommand.getDelay() > 0){
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    for (String command : ccommand.getCommand()){
+                        command = command.replace("%player%", target.getName()).replace("%target%", target.getName());
+                        AetherPotions.instance.getServer().dispatchCommand(ccommand.getExecutor().equals(CCommand.Executor.CONSOLE) ? AetherPotions.instance.getServer().getConsoleSender() : target, command);
+                    }
+                    e.remove(0);
+                    execute(target, e);
+                }
+            }.runTaskLater(AetherPotions.instance, ccommand.getDelay() * 20L);
+            return;
+        }
+        for (String command : ccommand.getCommand()){
+            command = command.replace("%player%", target.getName()).replace("%target%", target.getName());
+            AetherPotions.instance.getServer().dispatchCommand(ccommand.getExecutor().equals(CCommand.Executor.CONSOLE) ? AetherPotions.instance.getServer().getConsoleSender() : target, command);
+        }
+        e.remove(0);
+        if (!ccommand.isDelayed()) execute(target, e);
+
+        /*for (String s : ccommand.getCommand()) {
+            final String command = s.replace("%player%", target.getName()).replace("%target%", target.getName());
+            if (ccommand.getDelay() > 0) {
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        AetherPotions.instance.getServer().dispatchCommand(ccommand.getExecutor().equals(CCommand.Executor.CONSOLE) ? AetherPotions.instance.getServer().getConsoleSender() : target, command);
+                        e.remove(0);
+                        execute(target, e);
+                    }
+                }.runTaskLater(AetherPotions.instance, ccommand.getDelay() * 20L);
+                return;
+            }
+            AetherPotions.instance.getServer().dispatchCommand(ccommand.getExecutor().equals(CCommand.Executor.CONSOLE) ? AetherPotions.instance.getServer().getConsoleSender() : target, command);
+            e.remove(0);
+            if (!ccommand.isDelayed()) execute(target, e);
+        }*/
+
+    }
+
     /**
      * I wanted to do internally.
      * @param p Player
-     * @param item The potion
+     * @param item The potion as itemstack
      */
     private void applyEffect(Player p, ItemStack item) {
         if (CooldownHandler.isInCooldown(p.getUniqueId(), this.getId())) {
@@ -113,9 +172,7 @@ public class CustomPotion {
             c.start();
         }
 
-        for (String command : (isSplash ? getCommandList().getSplashCommandList() : getCommandList().getDrinkingCommandList())) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", p.getName()));
-        }
+        execute(p, commandList.drawCommandList((isSplash) ? commandList.getSplashCommandList() : commandList.getDrinkingCommandList()));
 
         if (!isSplash) {
             if (p.getInventory().getItemInMainHand().equals(item)) {
@@ -133,24 +190,35 @@ public class CustomPotion {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    for (String command : getCommandList().getAfterEffect().getCommandList()) {
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", p.getName()));
-                    }
+                    execute(p, commandList.drawCommandList(getCommandList().getAfterEffect().getCommandList()));
                 }
             }.runTaskLater(AetherPotions.instance, 20L * this.getCommandList().getAfterEffect().getTime());
         }
     }
 
-    // Decided to separate the apply method, because of the event handling.
-    // I only need the item, but maybe in the future, I will need the event too.
-    // I will probably change the methods, but for now, it's okay.
-    public void apply(Player p, PlayerItemConsumeEvent event) {
+     /** Decided to separate the apply method, because of the event handling.
+     I only need the item, but maybe in the future, I will need the event too.
+     I will probably change the methods, but for now, it's okay.
+     */
+     public void apply(Player p, PlayerItemConsumeEvent event) {
         applyEffect(p, event!= null ? event.getItem() : null);
     }
 
     public void apply(Player p, PlayerInteractEvent event) {
         applyEffect(p, event.getItem());
     }
+
+    /**
+     * Overwrite the potion in the potions.yml
+     * @return If the potion is overwritten
+     * @throws NotImplementedException
+     */
+    public boolean overwrite(){
+        throw new NotImplementedException("Not implemented yet.");
+    }
+
+
+
 }
 
 

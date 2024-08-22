@@ -34,9 +34,12 @@ public class Misc {
     }
 
     public static boolean checkPerm(Player player, String permission){
+        return checkPerm(player, permission, false);
+    }
+    public static boolean checkPerm(Player player, String permission, boolean silent){
         if (player == null)
             return true;
-        if (!player.hasPermission(permission))
+        if (!player.hasPermission(permission) && !silent)
             send(player, ConfigManager.get("messages.yml").getString("NoPermission").replace("%permission%", permission), true);
         return player.hasPermission(permission);
     }

@@ -19,7 +19,6 @@ import java.util.List;
  */
 @Data
 public class PotionValidation {
-    CustomPotion customPotion;
     boolean isValid;
     boolean exists;
     List<Errors> potionErrors;
@@ -39,6 +38,7 @@ public class PotionValidation {
         }
         checkItems();
         checkPotionType();
+        checkOldImplementation();
         checkCommandList();
         checkAfterEffect();
         checkParticle();
@@ -85,10 +85,28 @@ public class PotionValidation {
         }
     }
 
+    // Checking old implementation.
+    private void checkOldImplementation(){
+        if (potionErrors.contains(Errors.IS_SPLASH)){
+            return;
+        }
+        if (cf.isList("potions."+id+".commands.afterEffect.commands")){
+            potionErrors.add(Errors.OLD_IMPLEMENTATION);
+            return;
+        }
+        if (!cf.getBoolean("potions."+id+".isSplash") && cf.isList("potions."+id+".commands.drinkingCommands")){
+            potionErrors.add(Errors.OLD_IMPLEMENTATION);
+        }
+        if (cf.getBoolean("potions."+id+".isSplash") && cf.isList("potions."+id+".commands.splashCommands")){
+            potionErrors.add(Errors.OLD_IMPLEMENTATION);
+        }
+    }
+
     // Checking the splash & drink command list.
     private void checkCommandList() {
         String commands = "potions."+id+".commands.";
         String shortcut = "potions."+id+".";
+
         if (cf.isSet(shortcut + "isSplash") && cf.getBoolean(shortcut + "isSplash")){
             if (!cf.isSet(commands + "splashCommands")){
                 potionErrors.add(Errors.SPLASH_COMMANDS);
@@ -129,16 +147,27 @@ public class PotionValidation {
     }
 
 
+    @Getter
     public enum Errors{
-        DISPLAY_NAME,
-        LORE,
-        IS_SPLASH,
-        DELETE_BOTTLE,
-        POTION_TYPE,
-        PARTICLE,
-        DRINKING_COMMANDS,
-        SPLASH_COMMANDS,
-        AFTER_EFFECTS,
-        BOTH_EXTENDED_AND_UPGRADED
+        DISPLAY_NAME("Display name not found or not correct."),
+        LORE("Lore not found or not correct."),
+        IS_SPLASH ("Splash option is missing."),
+        DELETE_BOTTLE("Delete bottle parameter is missing."),
+        POTION_TYPE ("Potion type is missing or invalid."),
+        PARTICLE ("Particle type is missing or invalid."),
+        DRINKING_COMMANDS ("Drinking commands are missing."),
+        SPLASH_COMMANDS ("Splash commands are missing."),
+        AFTER_EFFECTS ("After effects are missing."),
+        BOTH_EXTENDED_AND_UPGRADED ("Both extended and upgraded parameters are set to true."),
+        OLD_IMPLEMENTATION("Old implementation of potion commands detected. Please migrate..");
+
+
+        final String message;
+        Errors(String message){
+            this.message = message;
+        }
+
+
+
     }
 }

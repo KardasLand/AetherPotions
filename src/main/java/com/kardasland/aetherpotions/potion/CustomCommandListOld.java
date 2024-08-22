@@ -9,14 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 // TODO
-// This class is not complete.
-// I need to work on more robust solution for this class.
-// its 2 am and i am tired.
-// For now, i will just add the required methods and fields to make the code compile.
-// I will come back to this class later.
+// Update: class was fucking mess. Totally overhauled and deserved.
+// It is here for archive reasons, will be deleted in future versions.
 
+@Deprecated(since = "3.2.2", forRemoval = true) // This class is deprecated and will be removed in the future.
 @Data
-public class CustomCommandList {
+public class CustomCommandListOld {
 
     private List<String> drinkingCommandList;
     private List<String> splashCommandList;
@@ -26,7 +24,7 @@ public class CustomCommandList {
     Probability beforeProbability;
     AfterEffect afterEffect;
 
-    public CustomCommandList(String id, boolean isSplash) {
+    public CustomCommandListOld(String id, boolean isSplash) {
         FileConfiguration cf = ConfigManager.get("potions.yml");
         this.isSplash = isSplash;
         String shortcut = "potions."+id+".commands.";

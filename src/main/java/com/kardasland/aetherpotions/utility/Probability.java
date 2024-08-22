@@ -25,7 +25,7 @@ public class Probability {
             return "[" + this.lowerLimit + "|" + this.upperLimit + "]: " + this.element.toString();
         }
     }
-    private final List<Chance> chances;
+    private List<Chance> chances;
     private int sum;
     private final Random random;
     public Probability() {
@@ -45,6 +45,12 @@ public class Probability {
         } else {
             // not sure yet, what to do, when the element already exists, since a list can't contain 2 equal entries. Right now a second, identical chance (element + chance must be equal) will be ignored
         }
+    }
+    public void reset() {
+        this.chances = new ArrayList<>();
+        this.sum = 0;
+        // reset the random seed
+        this.random.setSeed(System.currentTimeMillis());
     }
 
     /**

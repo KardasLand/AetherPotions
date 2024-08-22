@@ -54,7 +54,9 @@ public class DrinkEvent implements Listener {
             if (customPotion.isSplash()){
                 return;
             }
-            customPotion.apply(event.getPlayer(), event);
+            if (customPotion.isInstantDrink()){
+                customPotion.apply(event.getPlayer(), event);
+            }
         }
     }
 }
