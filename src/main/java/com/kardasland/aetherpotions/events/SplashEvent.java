@@ -1,6 +1,7 @@
 package com.kardasland.aetherpotions.events;
 
 import com.kardasland.aetherpotions.AetherPotions;
+import com.kardasland.aetherpotions.api.events.AetherPotionSplashEvent;
 import com.kardasland.aetherpotions.potion.CustomPotion;
 import com.kardasland.aetherpotions.potion.CustomPotionItem;
 import com.kardasland.aetherpotions.utility.ConfigManager;
@@ -44,32 +45,43 @@ public class SplashEvent implements Listener {
         if (event.getPotion().hasMetadata("aetherpotion") && event.getEntity().getShooter() instanceof Player) {
             String id = String.valueOf(event.getPotion().getMetadata("aetherpotion").get(0).value());
             CustomPotion customPotion = new CustomPotion(id);
-            event.setCancelled(!customPotion.isOriginalEffect());
+            event.setCancelled(true);
+
             boolean oneTime = true;
             for (Entity e : event.getAffectedEntities()){
                 if (e instanceof Player){
+                    AetherPotionSplashEvent splashEvent = new AetherPotionSplashEvent(customPotion, (Player) e, ((Player) event.getEntity().getShooter()).getPlayer());
+                    AetherPotions.instance.getServer().getPluginManager().callEvent(splashEvent);
+                    if (splashEvent.isCancelled()){
+                        returnSplash(event, customPotion);
+                        return;
+                    }
                     if (isAllowed(((Player) e).getPlayer(), event.getEntity().getLocation(), true)){
                         // we can safely do null because it cannot and will not use the event cause of the splash feature
                         customPotion.apply(Objects.requireNonNull(((Player) e).getPlayer()), (PlayerItemConsumeEvent) null);
                     }else if (oneTime){
                         // This is a joke
                         oneTime = false;
-                        Player shooter = (Player) event.getEntity().getShooter();
-                        Misc.send(shooter, ConfigManager.get("messages.yml").getString("NotAllowedToThrow"), true);
-
-                        CustomPotionItem potionItem = new CustomPotionItem(customPotion);
-                        // not sure if this is the best way to do this
-                        // because it updates the placeholders
-                        ItemStack potion = potionItem.build(shooter);
-                        potion = AetherPotions.instance.getNbtHandler().set(potion, id, "potionid");
-                        if (shooter.getInventory().firstEmpty() == -1){
-                            Objects.requireNonNull(shooter.getLocation().getWorld()).dropItemNaturally(shooter.getLocation(), potion);
-                        }else {
-                            shooter.getInventory().addItem(potion);
-                        }
+                        returnSplash(event, customPotion);
                     }
                 }
             }
+        }
+    }
+
+    private void returnSplash(PotionSplashEvent event, CustomPotion customPotion){
+        Player shooter = (Player) event.getEntity().getShooter();
+        Misc.send(shooter, ConfigManager.get("messages.yml").getString("NotAllowedToThrow"), true);
+
+        CustomPotionItem potionItem = new CustomPotionItem(customPotion);
+        // not sure if this is the best way to do this
+        // because it updates the placeholders
+        ItemStack potion = potionItem.build(shooter);
+        potion = AetherPotions.instance.getNbtHandler().set(potion, customPotion.getId(), "potionid");
+        if (shooter.getInventory().firstEmpty() == -1){
+            Objects.requireNonNull(shooter.getLocation().getWorld()).dropItemNaturally(shooter.getLocation(), potion);
+        }else {
+            shooter.getInventory().addItem(potion);
         }
     }
 

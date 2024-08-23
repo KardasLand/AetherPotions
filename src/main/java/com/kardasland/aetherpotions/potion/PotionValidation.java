@@ -25,8 +25,6 @@ public class PotionValidation {
     String id;
     FileConfiguration cf;
 
-
-
     public PotionValidation(String id){
         this.cf = ConfigManager.get("potions.yml");
         assert cf != null;
@@ -42,7 +40,7 @@ public class PotionValidation {
         checkCommandList();
         checkAfterEffect();
         checkParticle();
-        checkExtendAndUpgrade();
+        //checkExtendAndUpgrade();
         if (potionErrors.isEmpty()){
             setValid(true);
         }
@@ -76,6 +74,12 @@ public class PotionValidation {
         }
     }
 
+
+    /**
+     * Checking if the potion is extended and upgraded at the same time.
+     * @deprecated Since 3.0.1
+     */
+    @Deprecated(since = "3.0.1", forRemoval = true)
     private void checkExtendAndUpgrade(){
         String shortcut = "potions."+id+".";
         boolean isExtended = cf.isSet(shortcut + "data.extended") && cf.getBoolean(shortcut + "data.extended");

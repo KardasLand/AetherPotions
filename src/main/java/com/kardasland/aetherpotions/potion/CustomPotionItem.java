@@ -1,6 +1,7 @@
 package com.kardasland.aetherpotions.potion;
 
 import com.kardasland.aetherpotions.utility.Misc;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -9,13 +10,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
 
 import java.util.List;
 
+@Data
 public class CustomPotionItem {
-    @Getter @Setter
     private String id;
-    @Getter @Setter
     public CustomPotion customPotion;
     public CustomPotionItem(String id){
         this.customPotion = new CustomPotion(id, true);
@@ -34,7 +35,7 @@ public class CustomPotionItem {
         if (potionMeta != null) {
             potionMeta.setDisplayName(Misc.color(customPotion.getDisplayName()));
             potionMeta.setLore(Misc.color(customPotion.getLore()));
-            potionMeta.setBasePotionData(customPotion.getData());
+            potionMeta.setBasePotionData(new PotionData(customPotion.getType()));
             // This breaks when 1.20 and 1.21 idk other versions
             // TODO Need to fix this
             potionMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
@@ -59,7 +60,7 @@ public class CustomPotionItem {
             List<String> lore = customPotion.getLore();
             lore = PlaceholderAPI.setPlaceholders(player, lore);
             potionMeta.setLore(Misc.color(lore));
-            potionMeta.setBasePotionData(customPotion.getData());
+            potionMeta.setBasePotionData(new PotionData(customPotion.getType()));
             potionMeta.setCustomModelData(customPotion.getCustomModelData());
             // This breaks when 1.20 and 1.21 idk other versions
             // TODO Need to fix this

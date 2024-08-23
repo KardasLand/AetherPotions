@@ -1,5 +1,6 @@
 package com.kardasland.aetherpotions;
 
+import com.kardasland.aetherpotions.api.PotionManager;
 import com.kardasland.aetherpotions.commands.AetherTabCompleter;
 import com.kardasland.aetherpotions.commands.AetherCommand;
 import com.kardasland.aetherpotions.events.DrinkEvent;
@@ -30,8 +31,9 @@ public final class AetherPotions extends JavaPlugin {
     Also, custom events. idk why we need them, but we can add them. just for fun
      */
     public static AetherPotions instance;
-    NBTHandler nbtHandler;
-    ProtectionHandler protectionHandler;
+    private NBTHandler nbtHandler;
+    private ProtectionHandler protectionHandler;
+    PotionManager potionManager = new PotionManager();
 
     @Override
     public void onEnable() {

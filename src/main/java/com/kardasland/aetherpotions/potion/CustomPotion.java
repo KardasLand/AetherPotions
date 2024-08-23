@@ -7,7 +7,6 @@ import com.kardasland.aetherpotions.utility.CooldownHandler;
 import com.kardasland.aetherpotions.utility.Misc;
 import lombok.Data;
 import org.apache.commons.lang.NotImplementedException;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -21,8 +20,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.List;
 import java.util.Objects;
 
-
-@SuppressWarnings({"checkstyle:Indentation", "checkstyle:MissingJavadocType"})
 @Data
 public class CustomPotion {
     private String displayName;
@@ -37,11 +34,13 @@ public class CustomPotion {
     private int customModelData;
     private PotionType type;
 
+    /**
     private boolean isExtended = false;
     private boolean isUpgraded = false;
     private boolean originalEffect = false;
 
-    private PotionData data;
+    //private PotionData data;
+    */
     private PotionValidation validation;
 
 
@@ -77,9 +76,11 @@ public class CustomPotion {
         this.isSplash = cf.getBoolean(shortcut + "isSplash");
         this.instantDrink = cf.isSet(shortcut + "instantDrink") && cf.getBoolean(shortcut + "instantDrink");
         final String potionType = cf.getString(shortcut + "data.potionType");
+        this.type = PotionType.valueOf(potionType);
         if (cf.isSet(shortcut + "data.customModelData")) {
             this.customModelData = cf.getInt(shortcut + "data.customModelData");
         }
+        /*
         if (cf.isSet(shortcut + "data.extended")) {
             this.isExtended = cf.getBoolean(shortcut + "data.extended");
         }
@@ -88,8 +89,8 @@ public class CustomPotion {
         }
         if (cf.isSet(shortcut + "data.originalEffect")) {
             this.originalEffect = cf.getBoolean(shortcut + "data.originalEffect");
-        }
-        this.data = new PotionData(PotionType.valueOf(potionType), isExtended, isUpgraded);
+        }*/
+        //this.data = new PotionData(PotionType.valueOf(potionType), isExtended, isUpgraded);
         if (!reduced) {
             this.deleteBottle = !isSplash && cf.getBoolean(shortcut + "deleteBottle");
             this.particle = new CustomParticle(id);
@@ -134,7 +135,9 @@ public class CustomPotion {
         e.remove(0);
         if (!ccommand.isDelayed()) execute(target, e);
 
-        /*for (String s : ccommand.getCommand()) {
+        /* For archive purposes, will be deleted in the future.
+
+        for (String s : ccommand.getCommand()) {
             final String command = s.replace("%player%", target.getName()).replace("%target%", target.getName());
             if (ccommand.getDelay() > 0) {
                 new BukkitRunnable() {
@@ -155,7 +158,7 @@ public class CustomPotion {
     }
 
     /**
-     * I wanted to do internally.
+     * Applies the potion effect to the player
      * @param p Player
      * @param item The potion as itemstack
      */

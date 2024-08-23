@@ -1,9 +1,6 @@
 package com.kardasland.aetherpotions.potion;
 
-import com.kardasland.aetherpotions.AetherPotions;
 import lombok.Data;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
@@ -41,37 +38,6 @@ public class CCommand {
     public boolean isDelayed() {
         return delay > 0;
     }
-
-
-    // alright fuck it i cant find a way to effectively chain delays.
-    // RECURSIVE TIME MOTHERFUCKER
-    public void execute(Player target){
-        for (String s : command) {
-            final String command = s.replace("%player%", target.getName()).replace("%target%", target.getName());
-            if (delay > 0) {
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        AetherPotions.instance.getServer().dispatchCommand(executor.equals(Executor.CONSOLE) ? AetherPotions.instance.getServer().getConsoleSender() : target, command);
-                    }
-                }.runTaskLater(AetherPotions.instance, delay * 20L);
-                return;
-            }
-            AetherPotions.instance.getServer().dispatchCommand(executor.equals(Executor.CONSOLE) ? AetherPotions.instance.getServer().getConsoleSender() : target, command);
-        }
-    }
-
-
-    public void execute(Player target, List<CCommand> e){
-        if (e.isEmpty()){
-            return;
-        }
-        CCommand command1 = e.get(0);
-        command1.execute(target);
-        e.remove(command1);
-        execute(target, e);
-    }
-
 
     public enum Executor {
         CONSOLE,

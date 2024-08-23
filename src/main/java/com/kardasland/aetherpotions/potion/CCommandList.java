@@ -6,8 +6,8 @@ import com.kardasland.aetherpotions.utility.Probability;
 import lombok.Data;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -86,7 +86,7 @@ public class CCommandList {
      * @param rawList Raw list of commands. Splash, Drinking, AfterEffect
      * @return Calculated list of commands to be executed.
      */
-    public List<CCommand> drawCommandList(List<CCommand> rawList) {
+    public List<CCommand> drawCommandList(@NotNull List<CCommand> rawList) {
         Probability probability = new Probability();
         List<CCommand> drawList = new ArrayList<>();
         List<CCommand> chanceList = new ArrayList<>();
@@ -125,12 +125,6 @@ public class CCommandList {
         return drawList;
     }
 
-    public enum MigrationStatus {
-        MIGRATED,
-        NOT_MIGRATED,
-        NOT_NEEDED,
-        FAILED,
-    }
     @Data
     public static class AfterEffect{
         private boolean enabled;
@@ -183,5 +177,11 @@ public class CCommandList {
             ConfigManager.reload("potions.yml");
             return MigrationStatus.MIGRATED;
         }
+    }
+    public enum MigrationStatus {
+        MIGRATED,
+        NOT_MIGRATED,
+        NOT_NEEDED,
+        FAILED,
     }
 }

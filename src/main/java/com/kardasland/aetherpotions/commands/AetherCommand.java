@@ -130,7 +130,6 @@ public class AetherCommand implements CommandExecutor {
                 Misc.send(player, "&bLore: &7" + customPotion.getLore().toString(), false);
             Misc.send(player, "&bIs it splash?: " + (customPotion.isSplash() ? "&atrue": "&cfalse"), false);
             Misc.send(player, "&bDelete bottle? " + (customPotion.isDeleteBottle() ? "&atrue" : "&cfalse"), false);
-            Misc.send(player, "&bPotion type &7: " + customPotion.getData().getType().getEffectType().getName(), false);
             Misc.send(player, "&bParticle enabled: " + (customPotion.getParticle().isEnabled() ? "&atrue" : "&cfalse"), false);
             if (customPotion.getParticle().isEnabled()){
                 Misc.send(player, "&bParticle type: &7" + customPotion.getParticle().getType(), false);

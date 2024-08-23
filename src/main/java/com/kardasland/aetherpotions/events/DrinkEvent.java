@@ -1,6 +1,7 @@
 package com.kardasland.aetherpotions.events;
 
 import com.kardasland.aetherpotions.AetherPotions;
+import com.kardasland.aetherpotions.api.events.AetherPotionDrinkEvent;
 import com.kardasland.aetherpotions.potion.CustomPotion;
 import com.kardasland.aetherpotions.potion.PotionValidation;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
@@ -25,7 +26,12 @@ public class DrinkEvent implements Listener {
                 PotionValidation potionValidation = new PotionValidation(id);
                 if (potionValidation.isExists() && potionValidation.isValid() ){
                     CustomPotion customPotion = new CustomPotion(id);
-                    event.setCancelled(!customPotion.isOriginalEffect());
+                    event.setCancelled(true);
+                    AetherPotionDrinkEvent drinkEvent = new AetherPotionDrinkEvent(customPotion, event.getPlayer());
+                    Bukkit.getPluginManager().callEvent(drinkEvent);
+                    if (drinkEvent.isCancelled()){
+                        return;
+                    }
                     customPotion.apply(event.getPlayer(), event);
                 }
             }
@@ -55,6 +61,11 @@ public class DrinkEvent implements Listener {
                 return;
             }
             if (customPotion.isInstantDrink()){
+                AetherPotionDrinkEvent drinkEvent = new AetherPotionDrinkEvent(customPotion, event.getPlayer(), true);
+                Bukkit.getPluginManager().callEvent(drinkEvent);
+                if (drinkEvent.isCancelled()){
+                    return;
+                }
                 customPotion.apply(event.getPlayer(), event);
             }
         }
