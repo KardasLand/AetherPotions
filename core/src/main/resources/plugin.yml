@@ -1,0 +1,14 @@
+name: AetherPotions
+version: '${project.version}'
+main: com.kardasland.aetherpotions.AetherPotions
+api-version: 1.13
+authors: [KardasLand]
+depend:
+  - WorldGuard
+  - WorldEdit
+description: ${project.description}
+website: www.kardasland.com
+commands:
+  aetherpotions:
+    aliases:
+      - ap

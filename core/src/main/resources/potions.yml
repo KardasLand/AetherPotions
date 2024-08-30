@@ -1,0 +1,135 @@
+potions:
+  # Drinkable potion example
+  # potion id. Needs to be unique.
+  drink:
+    # You can use placeholders in display name and lore.
+    displayName: '&cDrink - %player_name%'
+    lore:
+      - '&5Drink potion attempt'
+    # Will potion be splash or drinkable?
+    isSplash: false
+    # If it is drinkable, will it delete the bottle?
+    deleteBottle: true
+    # If you want to make it instant drinkable,
+    # aka right click consume, you can use this option.
+    instantDrink: false
+    # Cooldown in seconds.
+    cooldown: 10
+    data:
+      # Custom model data. You can use this for custom textures.
+      customModelData: 1
+      # Potion type. Things like Speed, Strength etc...
+      # Do not put prefixes like STRONG, LONG etc. Just put the plain old potion type and configure level/time below.
+      # List: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionType.html
+      potionType: STRENGTH
+    particle:
+      # Particle system.
+      # List: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+      enabled: false
+      type: ''
+      # Time in seconds.
+      time: 200
+      # Particle amount per second. You have to try and test this setting.
+      amount: 20
+    commands:
+      # Commands to be executed after drinking the potion.
+      drinkingCommands:
+        '1':
+          commands:
+            - give %player% diamond 5
+          chance: 0
+          weight: 0
+          executor: CONSOLE
+        '2':
+          commands:
+            - msg %player% You drank the potion!
+          executor: CONSOLE
+          chance: 0
+          weight: 0
+      afterEffect:
+        # After Effect feature.
+        enabled: true
+        # Time in seconds.
+        time: 5
+        commands:
+          '1':
+            commands:
+              - give %player% diamond 5
+              - msg %player% maybe you should drink another potion?
+            executor: CONSOLE
+  # Splash potion example. Pretty much same.
+  # You need to enable potion-splash flag on regions you want to enable splash potions!
+  splash:
+    displayName: '&cSplash Try'
+    lore:
+      - '&5Trying splash feature'
+    isSplash: true
+    deleteBottle: false
+    cooldown: 10
+    data:
+      potionType: STRENGTH
+    particle:
+      enabled: true
+      type: END_ROD
+      time: 10
+      amount: 50
+    commands:
+      afterEffect:
+        enabled: true
+        time: 8
+        commands:
+          '1':
+            commands:
+              - msg %player% afterEffect
+            chance: 0
+            weight: 0
+            executor: CONSOLE
+      splashCommands:
+        '1':
+          commands:
+            - give %player% iron_ingot 5
+          chance: 0
+          weight: 0
+          executor: CONSOLE
+  # Custom flight potion example by @nichoooooooo.
+  flight:
+    displayName: '&6Flight Potion'
+    lore:
+      - '&9Food & Drinks'
+      - '&9Flight I (04:00)'
+    isSplash: false
+    deleteBottle: false
+    instantDrink: false
+    data:
+      potionType: LUCK
+    particle:
+      enabled: true
+      type: EFFECT
+      time: 240
+      amount: 50
+    commands:
+      afterEffect:
+        enabled: true
+        time: 240
+        commands:
+          '1':
+            commands:
+              - fly %player% disable
+              - w %player% You're starting to feel pretty normal again. Perhaps another potion?
+            chance: 0
+            weight: 0
+            executor: CONSOLE
+      drinkingCommands:
+        '1':
+          commands:
+            - fly %player% enable
+          chance: 0
+          weight: 0
+          executor: CONSOLE
+        '2':
+          commands:
+            - w %player% You get this whimsical feeling flowing through your body.. you're glowing.. and you can fly!!
+            - effect give %player% minecraft:glowing 300
+          chance: 0
+          weight: 0
+          executor: CONSOLE
